@@ -1,4 +1,5 @@
 <?php
+require_once '../componentes/heder.php';
 require_once 'componentes/nav.php';
 ?>
 <div class="container" style="padding-top: 4rem;">
@@ -19,7 +20,7 @@ require_once 'componentes/nav.php';
                         <br>
                         <b>Porcentaje de resultados fase 2: </b>
                     </p>
-                    <a href="#" class="btn btn-primary" style="margin-bottom:2%">Ver detalles</a>
+                    <a href="resultados_por_usuario.php" class="btn btn-primary" style="margin-bottom:2%">Ver detalles</a>
                 </div>
             </div>
         </div>
@@ -45,3 +46,5 @@ require_once 'componentes/nav.php';
         </div>
     </div>
 </div>
+<?php
+ require_once '../componentes/footer.php';

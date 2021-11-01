@@ -1,4 +1,5 @@
 <?php
+require_once '../componentes/heder.php';
 require_once 'componentes/nav.php';
 ?>
 <div class="container" style="padding-top: 4rem;">
@@ -15,13 +16,17 @@ require_once 'componentes/nav.php';
             <div class="temporizador" style="background-color: #DCDA87;"> No resueltas: 5</div>
         </div>
     </div>
-    <h3 style="text-align:center; margin-bottom: 2%;">Nombre</h3>
-    <div class="row g-3">
+    <div id="listado">
+        <h3 id="nombre_fase" style="text-align:center; margin-bottom: 2%;">Nombre</h3>
+        <div class="row g-3">
 
 
-        <?php
-        require_once 'componentes/preguntas_resueltas.php';
-        ?>
+            <?php
+            require_once 'componentes/preguntas_resueltas.php';
+            ?>
 
+        </div>
     </div>
 </div>
+<?php
+require_once '../componentes/footer.php';

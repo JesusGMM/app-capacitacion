@@ -1,9 +1,9 @@
 <?php
 require_once 'componentes/nav.php';
-?>
-<div class="container" style="padding-top: 4rem;">
-    <h3 style="text-align: center; margin-bottom: 2%;">Capacitaciónes Realizadas</h3>
 
+?>
+<div class="container" style="padding-top: 4rem; margin-bottom: 2%;">
+    <h3 style="text-align: center; margin-bottom: 2%;">Capacitaciónes Realizadas</h3>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col">
             <div class="card">
@@ -20,10 +20,13 @@ require_once 'componentes/nav.php';
                     <br>
                     Puntaje total:
                     <br>
-                    
+
                 </div>
                 <div class="card-footer">
-                   <button type="button" class="btn btn-success" style="margin-top:2%">Revisar</button>
+                    <form method="post" action="capacitacion_resuelta.php">
+                        <input type="Hidden" name="id_capacitacion" value="1">
+                        <button type="submit" class="btn btn-success" style="margin-top:2%">Revisar</button>
+                    </form>
                 </div>
             </div>
         </div>

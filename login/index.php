@@ -1,21 +1,7 @@
+<?php 
+require_once '../componentes/heder.php';
+?>
 
-<!DOCTYPE html>
-<html lang="en" <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Login</title>
-<!-- Estilo de boostrapt -->
-
-<link href="../componentes/css/bootstrap.min.css" rel="stylesheet">
-<!-- Estilo de personalizados -->
-<link href="../componentes/css/login.css" rel="stylesheet">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="../componentes/js/jquery-3.6.0.min.js" type="text/javascript"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-
-<body>
 <div>
     <div class="container-fluid h-custom">
         <div class="row d-flex justify-content-center align-items-center vh-100">
@@ -24,7 +10,7 @@
                 <img src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-login-form/draw2.png" class="img-fluid" alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form action="../vista/" method="post">
+                <form action="../" method="post">
 
                     <div style="text-align:center; margin-top:18%">
                         <p class="lead fw-normal mb-0 me-3">Iniciar Seccion</p>
@@ -41,14 +27,14 @@
 
                     <!-- Password input -->
                     <div class="form-outline mb-3">
-                        <input type="password" id="form3Example4" class="form-control form-control-lg" placeholder="Contraseña" required />
+                        <input type="password" name="password" id="form3Example4" class="form-control form-control-lg" placeholder="Contraseña" required />
                         <label class="form-label" for="form3Example4">Contraseña</label>
                     </div>
 
 
 
                     <div class="text-center text-lg-start mt-4 pt-2">
-                        <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Iniciar Sección</button>
+                        <button type="submit" name="login" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Iniciar Sección</button>
                         <p class="small fw-bold mt-2 pt-1 mb-0"></p>
                     </div>
 
@@ -70,10 +56,19 @@
 
         </div>
 
-
     </div>
 </div>
-<script src="../componentes/js/bootstrap.min.js" type="text/javascript"></script>
-</body>
-
-</html>
+<?php
+if (isset($_GET['ingreso']) && $_GET['ingreso'] == false) { ?>
+    <script type="text/javascript">
+        Swal.fire({
+            position: 'top-center',
+            icon: 'warning',
+            title: 'Usuario no registrado',
+            confirmButtonColor: "#0d6efd",
+            showConfirmButton: true,
+        })
+    </script>
+<?php
+}
+require_once '../componentes/footer.php';

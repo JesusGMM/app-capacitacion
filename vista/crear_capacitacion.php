@@ -1,8 +1,9 @@
 <?php
+require_once '../componentes/heder.php';
 require_once 'componentes/nav.php';
 ?>
 <div class="container" style="padding-top: 4rem;">
-    <form class="row g-3" type="POST" enctype="multipart/formdata">
+    <form class="row g-3" type="POST" id="crear" enctype="multipart/formdata">
         <div class="col-md-6">
             <label for="inputAddress" class="form-label">Titulo de la capacitación</label>
             <input type="text" class="form-control" name="titulo" id="inputAddress" placeholder="Titulo" required>
@@ -84,7 +85,7 @@ require_once 'componentes/nav.php';
                 }
             }
         </script>
- 
+
         <div class="col-md-6" style="margin-top:2%">
             <label for="inputAddress2" class="form-label">Descripcion de la capacitación</label>
             <div class="form-floating">
@@ -99,3 +100,23 @@ require_once 'componentes/nav.php';
         </div>
     </form>
 </div>
+<script>
+    function crearUsuario(){
+        $.ajax({
+            url: './vistas/modulos/actualizar_planes.php',
+            data: $('#crear').serialize(),
+            type: 'post',
+            beforeSend: function() {
+                $("#label<?php echo $item['id']; ?>").html("Procesando");
+            },
+            error: function() {
+                $("#label<?php echo $item['id']; ?>").html("Hubo un error");
+            },
+            success: function(label<?php echo $item['id']; ?>) {
+                $("#label<?php echo $item['id']; ?>").html(label<?php echo $item['id']; ?>);
+            }
+        });
+    }
+</script>
+<?php
+require_once '../componentes/footer.php';

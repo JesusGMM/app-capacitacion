@@ -1,4 +1,5 @@
 <?php
+require_once '../componentes/heder.php';
 require_once 'componentes/nav.php';
 ?>
 <div class="container" style="padding-top: 4rem;">
@@ -19,7 +20,10 @@ require_once 'componentes/nav.php';
                     <br>
                     Capacitaciónes perdidas:
                 </div>
-                <a href="#" class="btn btn-primary" style="margin-bottom:2%">Revisar capacitaciónes</a>
+                <form method="get" style="text-align:center;" action="../vista/">
+                    <input type="Hidden" name="id" value="1">
+                    <button style="margin-bottom:2%;" type="submit" class="btn btn-primary">Revisar capacitaciónes</button>
+                </form>
             </div>
         </div>
         <div class="col-md-4" style="margin-bottom: 2%;">
@@ -73,7 +77,7 @@ require_once 'componentes/nav.php';
                 </div>
             </div>
         </div>
-        <div class="col-md-4" >
+        <div class="col-md-4">
             <div class="card border-secondary" style="padding: 2%;">
                 <div class="card-header">Jesus Martinez Cod: jm-006</div>
                 <div class="card-body text-secondary">
@@ -93,3 +97,5 @@ require_once 'componentes/nav.php';
 
     </div>
 </div>
+<?php
+require_once '../componentes/footer.php';

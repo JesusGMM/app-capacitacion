@@ -32,4 +32,8 @@ width: 12rem;
     opacity: 1;
     visibility: visible;
 }
+.border-boton{
+  box-shadow: 0 0 0 3px #dd7f78;
+}
+
 
