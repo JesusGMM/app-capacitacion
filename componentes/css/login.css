@@ -1,0 +1,35 @@
+.divider:after,
+.divider:before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #eee;
+}
+.h-custom {
+  height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+  .h-custom {
+    height: 100%;
+  }
+}
+
+.temporizador {
+background-color: #eee;
+padding: 1%;
+text-align:center;
+border-radius: 2rem;
+width: 12rem;
+}
+.nav-fijo{
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 10;
+}
+
+[data-title]:hover:after {
+    opacity: 1;
+    visibility: visible;
+}
+
