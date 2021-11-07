@@ -2,6 +2,8 @@
   <?php
   require_once '../componentes/heder.php';
   require_once "../controlador/usuario.controlador.php";
+  require_once "../controlador/curso.controlador.php";
+  require_once "../controlador/pregunta.controlador.php";
   if (isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"] == "ok") {
 
     if (isset($_POST["realizar"])) {
@@ -15,6 +17,8 @@
       require_once("crear_capacitacion.php");
     } else if (isset($_GET["resultados"])) {
       require_once("resultados.php");
+    }else if ((isset($_GET["crear-preguntas-capacitacion-id"])) || (isset($_GET["editar-preguntas-capacitacion-id"]))) {
+      require_once("crear_preguntas.php");
     } else {
       require_once("cursos.php");
     }

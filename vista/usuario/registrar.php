@@ -8,7 +8,7 @@ if ($registro[0] == 1) { ?>
         Swal.fire({
             position: 'top-center',
             icon: 'success',
-            title: 'Usuario registrado',
+            title: '<?php echo $registro[1]; ?>',
             confirmButtonColor: "#0d6efd",
             showConfirmButton: false,
         })

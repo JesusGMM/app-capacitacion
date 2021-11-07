@@ -35,5 +35,8 @@ width: 12rem;
 .border-boton{
   box-shadow: 0 0 0 3px #dd7f78;
 }
+.bi bi-trash-fill :hover {
+  fill: white;
+}
 
 

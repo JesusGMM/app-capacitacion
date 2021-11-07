@@ -76,7 +76,7 @@ class Persona {
     }
 
     public function getPasword() {
-        return hash('whirlpool', $this->password);
+        return $this->password;
     }
 
     public function getRol() {

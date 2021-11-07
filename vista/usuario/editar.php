@@ -1,6 +1,7 @@
 <?php
 foreach ($usu as $usuario) { ?>
     <form method="post" action="" id="form-editar" class="row g-3">
+        <input type="hidden" name="id" value="<?php echo $usuario->getId(); ?>" />
         <div class="col-md-6">
             <label for="nombre" class="form-label">Nombre</label>
             <input name="nombre" type="text" class="form-control" value="<?php echo $usuario->getNombre(); ?>" placeholder="Nombres" required>

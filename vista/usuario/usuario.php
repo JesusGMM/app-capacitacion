@@ -10,7 +10,7 @@ require_once 'componentes/nav.php';
     </div>
     <div id="lista-usuarios" class="table-responsive">
         <?php
-        require_once 'componentes/listado_usuarios.php';
+        require_once 'usuario/listado_usuarios.php';
         ?>
     </div>
     <script>

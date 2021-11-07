@@ -63,8 +63,8 @@ if (isset($_GET['ingreso']) && $_GET['ingreso'] == false) { ?>
     <script type="text/javascript">
         Swal.fire({
             position: 'top-center',
-            icon: 'warning',
-            title: 'Usuario no registrado',
+            icon: 'error',
+            title: 'Nombre de usuario o contraseña incorrecta',
             confirmButtonColor: "#0d6efd",
             showConfirmButton: true,
         })

@@ -3,8 +3,7 @@
 class ControladorUsuario
 {
 
-  private $db;
-  private $personas;
+  private $array;
 
   function __construct($var)
   {
@@ -18,8 +17,7 @@ class ControladorUsuario
       require_once("../../clases/persona.php");
     }
 
-    $this->db = conectar::conexion();
-    $this->personas = array();
+    $this->array = array();
   }
 
   function crear($arr)
@@ -46,7 +44,6 @@ class ControladorUsuario
         return $dato;
       }
     } else {
-      $array = array();
       $array[0] = 0;
       return $array;
     }
@@ -56,20 +53,17 @@ class ControladorUsuario
   {
     $personaMo = new ModeloUsuario(1);
 
-    if (trim($buscar) == "") {
+    if (empty(trim($buscar))) {
       return $personaMo->listar($empieza, $por_pagina);
     } else {
       return $personaMo->buscar(trim($buscar), $empieza, $por_pagina);
     }
   }
 
-  function buscarUsuarios($id,$tipo)
+  function buscarUsuarios($id, $tipo)
   {
     $personaMo = new ModeloUsuario($tipo);
-
-    if (trim($id) == "") {
-      return "El usuario no existe";
-    } else {
+    if (!empty(trim($id))) {
       return $personaMo->buscarUsuario(trim($id));
     }
   }
@@ -81,47 +75,52 @@ class ControladorUsuario
       $dato = validar($arr);
       if ($dato[0] == 1) {
         $personaMo = new ModeloUsuario(2);
-          $persona = new Persona();
-          $persona->setNombre($arr["nombre"]);
-          $persona->setApellido($arr["apellido"]);
-          $persona->setEmail($arr["email"]);
-          $persona->setUsuario($arr["usuario"]);
-          $persona->setPassword($arr["contrasena"]);
-          $persona->setRol($arr["perfil"]);
-          $persona->setCodigo($arr["codigo"]);
-          return $personaMo->actualizar($persona);
-       
+        $persona = new Persona();
+        $persona->setId($arr['id']);
+        $persona->setNombre($arr["nombre"]);
+        $persona->setApellido($arr["apellido"]);
+        $persona->setEmail($arr["email"]);
+        $persona->setUsuario($arr["usuario"]);
+        $persona->setPassword($arr["contrasena"]);
+        $persona->setRol($arr["perfil"]);
+        $persona->setCodigo($arr["codigo"]);
+        return $personaMo->actualizar($persona);
       } else {
         return $dato;
       }
     } else {
-      $array = array();
       $array[0] = 0;
       return $array;
     }
   }
 
-
-
+  function eliminar($id)
+  {
+    if (empty(trim($id))) {
+      $array[] = 2;
+      $array[]  = "Usuario no encontrado";
+      return $array;
+    } else {
+      $personaMo = new ModeloUsuario(2);
+      return $personaMo->eliminar(trim($id));
+    }
+  }
 }
-
 
 function validar($arr)
 {
   $array = array();
-  $mensaje = "";
   if (trim($arr["nombre"]) == "") {
     $array[] = 2;
-    $mensaje = "Ingrese un nombre valido";
+    $array[]  = "Ingrese un nombre valido";
   } else if (trim($arr["usuario"]) == "") {
     $array[] = 2;
-    $mensaje = "Ingrese un nombre de usuario valido";
+    $array[]  = "Ingrese un nombre de usuario valido";
   } else if (trim($arr["usuario"]) == "") {
     $array[] = 2;
-    $mensaje = "Ingrese un nombre de usuario valido";
+    $array[]  = "Ingrese un nombre de usuario valido";
   } else {
     $array[] = 1;
   }
-  $array[] = $mensaje;
   return $array;
 }
