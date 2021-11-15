@@ -6,16 +6,17 @@ class ControladorCurso
 
   function __construct($var)
   {
-    if ($var == 1){
+    if ($var == 1) {
       require_once("../clases/curso.php");
       require_once("../modelo/CursoModelo.php");
-    }else{
+    } else {
       require_once("../../clases/curso.php");
       require_once("../../modelo/CursoModelo.php");
     }
 
     $this->array = array();
   }
+
   function crear($arr)
   {
     if ($arr != null) {
@@ -50,6 +51,53 @@ class ControladorCurso
     return $array;
   }
 
+  function actualizarCapacitacion($arr)
+  {
+    if ($arr != null) {
+      $array = $this->validarDatoCurso($arr);
+      if ($array[0] == 1) {
+        $cursoMo = new ModeloCurso(1);
+        $array = $cursoMo->validarCurso($arr['codigo']);
+        if (($array[0] == 3 && $array[3] == $arr['id_cap']) || $array[0] == 1) {
+          $curso = new curso();
+          $curso->setId($arr["id_cap"]);
+          $curso->setNombre($arr["titulo"]);
+          $curso->setDescripcion($arr["descripcion"]);
+          $curso->setTiempo($arr["tiempo"]);
+          $curso->setCan_pregutas($arr["cantidad"]);
+          $curso->setUrl($arr["url"]);
+          $curso->setEstado($arr["estado"]);
+          $curso->setCodigo($arr["codigo"]);
+          if (!empty(trim($_FILES["imagen"]["name"]))) {
+            $test = explode('.', $_FILES["imagen"]["name"]);
+            $name = $test[0] . $arr["codigo"] . '.PNG';
+          } else if ($array[0] == 3) {
+            $name = $arr['foto'];
+          } else {
+            $name = "imagen_" . $arr["codigo"] . ".PNG";
+          }
+          $curso->setImagen($name);
+          $array =  $cursoMo->actualizar($curso);
+
+          if ($array[0] == 1) {
+            if (!empty(trim($_FILES["imagen"]["name"]))) {
+              $location = '../componentes/imagenes/' . $curso->getImagen();
+              move_uploaded_file($_FILES["imagen"]["tmp_name"], $location);
+            } else {
+              rename("../componentes/imagenes/{$arr['foto']}", "../componentes/imagenes/{$curso->getImagen()}");
+            }
+          }
+        } else {
+          $array[0] = 3;
+          $array[1] = "El codigo ya esta en uso";
+        }
+      }
+    } else {
+      $array[] = 0;
+    }
+    return $array;
+  }
+
   function actualizarEstado($arr, $estado)
   {
     if ((is_numeric($estado))) {
@@ -79,7 +127,7 @@ class ControladorCurso
         $curso->setCodigo($arr["codigo"]);
         $curso->setCan_pregutas($numero);
         $array =  $cursoMo->actualizarNumeroPreguntas($curso);
-        $array[2] = $numero; 
+        $array[2] = $numero;
       }
     } else {
       $array[] = 2;
@@ -95,7 +143,7 @@ class ControladorCurso
       $cursoMo = new ModeloCurso(2);
       $array = $cursoMo->validarCurso($arr["codigo"]);
       if ($array[0] == 3) {
-        $array =  $cursoMo->eliminarCapacitacion($arr["codigo"],$array[3]);
+        $array =  $cursoMo->eliminarCapacitacion($arr["codigo"], $array[3]);
       }
     } else {
       $array[] = 2;

@@ -120,6 +120,7 @@ if (((isset($_GET['crear-preguntas-capacitacion-id'])) && (!empty(trim($_GET['cr
                             <?php } ?>
 
                             <button type="button" class="btn btn-danger" style="margin-bottom: 2%;" onclick='eliminar()'>Eliminar pregunta</button>
+                            <a  style="margin-bottom: 2%;" href='../vista/' class="btn btn-secondary">Salir</a>
                             <script type="text/javascript">
                                 function eliminar() {
                                     Swal.fire({

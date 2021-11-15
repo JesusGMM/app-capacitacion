@@ -62,7 +62,7 @@ class ModeloCurso
         $estado = $curso->getEstado();
 
         try {
-            $sql = "INSERT INTO `capacitaciones` (`codigo`,`nombre`, `descripcion`, `numero_preguntas`, `tiempo`, `estado`, `link_video`, `imagen`) VALUES (:codigo,:nombre,:descripcion,:cantidad,:duracion,:estado,:direcion,:foto)";
+            $sql = "INSERT INTO capacitaciones (codigo,nombre, descripcion, numero_preguntas, tiempo, estado, link_video, imagen) VALUES (:codigo,:nombre,:descripcion,:cantidad,:duracion,:estado,:direcion,:foto)";
             $consulta = $this->db->prepare($sql);
             $consulta->bindParam(":codigo", $codigo, PDO::PARAM_STR);
             $consulta->bindParam(":nombre", $nombre, PDO::PARAM_STR);
@@ -93,6 +93,53 @@ class ModeloCurso
             return $array;
             // echo "<br><br><br><br>";
             // echo $e->getLine();
+            die("Error :" . $e->getMessage());
+        }
+        return $array;
+    }
+
+    
+    // ACTUALIZAR UN CURSO
+    function actualizar(Curso $curso)
+    {
+        $id = $curso->getId();
+        $codigo = $curso->getCodigo();
+        $nombre = $curso->getNombre();
+        $descripcion = $curso->getDescripcion();
+        $tiempo = $curso->getTiempo();
+        $numero = $curso->getCan_pregutas();
+        $url = $curso->getUrl();
+        $imagen = $curso->getImagen();
+        $estado = $curso->getEstado();
+
+        try {
+            $sql = "UPDATE capacitaciones SET codigo=:codigoCap, nombre=:titulo, descripcion=:desCap, numero_preguntas=:numCap, tiempo=:duracion, estado=:estadoCap, link_video=:urlCap, imagen=:foto WHERE id=:idCap";
+            $actualizar = $this->db->prepare($sql);
+            $actualizar->bindParam(":idCap", $id, PDO::PARAM_INT);
+            $actualizar->bindParam(":codigoCap", $codigo, PDO::PARAM_STR);
+            $actualizar->bindParam(":titulo", $nombre, PDO::PARAM_STR);
+            $actualizar->bindParam(":desCap", $descripcion, PDO::PARAM_STR);
+            $actualizar->bindParam(":numCap", $numero, PDO::PARAM_INT);
+            $actualizar->bindParam(":duracion", $tiempo, PDO::PARAM_INT);
+            $actualizar->bindParam(":estadoCap", $estado, PDO::PARAM_INT);
+            $actualizar->bindParam(":urlCap", $url, PDO::PARAM_STR);
+            $actualizar->bindParam(":foto", $imagen, PDO::PARAM_STR);
+            $actualizar->execute();
+            
+            if ($actualizar->rowCount() > 0) {
+                $array[0] = 1;
+                $array[1] = "Capacitacion actualizada";
+            } else {
+                $array[0] = 3;
+                $array[1] = "Capacitacion no actualizado inténtelo nuevamente";
+            }
+            $actualizar->closeCursor();
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $array;
+            
+             echo $e->getLine();
             die("Error :" . $e->getMessage());
         }
         return $array;
@@ -161,7 +208,7 @@ class ModeloCurso
     }
 
     //ELIMINAR CURSO
-    function eliminarCapacitacion($codigo,$id)
+    function eliminarCapacitacion($codigo, $id)
     {
         try {
             require_once "../../controlador/pregunta.controlador.php";
@@ -229,14 +276,20 @@ class ModeloCurso
     function listar($busqueda, $empieza, $finaliza)
     {
         try {
-            if (empty(trim($busqueda))) {
+            if (empty($busqueda) && (!empty(trim($finaliza)))) {
                 $sql = "SELECT * FROM capacitaciones ORDER BY id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+                $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+               
+            } else if (((empty(trim($empieza))) && (empty(trim($finaliza))))) {
+                $sql = "SELECT * FROM capacitaciones WHERE id=:id_curso";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":id_curso", $busqueda, PDO::PARAM_INT);
+                
             } else {
                 $sql = "SELECT * FROM capacitaciones WHERE id={$busqueda} ORDER BY id DESC limit :inicia, :fin ";
             }
-            $consulta = $this->db->prepare($sql);
-            $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
-            $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
             $consulta->execute();
             if ($consulta->rowCount() > 0) {
                 while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {

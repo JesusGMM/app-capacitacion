@@ -70,14 +70,14 @@ if ($registro[0] == 1) { ?>
         <div class="col-md-6" style="margin-top:2%">
             <label for="url" class="form-label">Url del video <b >Ayuda: </b> <a href="https://localhost/app_capacitacion/vista/" target="_blank" style="margin-bottom:2%"> Como copiar una URL</a> </label>
             <div class="form-floating">
-                <textarea name="url" style="height: 150px" class="form-control" id="Textarea" ></textarea>
+                <textarea name="url" style="height: 150px" class="form-control" id="Textarea" ><?php if(isset($_POST['url'])) echo $_POST['url']; ?></textarea>
                 <label for="Textarea">Video instructivo de la capacitación</label>
             </div>
         </div>
         <div class="col-md-6" style="margin-top:2%">
             <label for="inputAddress2" class="form-label">Descripcion de la capacitación</label>
             <div class="form-floating">
-                <textarea name="descripcion" style="height: 150px" class="form-control" id="floatingTextarea" value="<?php if(isset($_POST['descripcion'])) echo $_POST['descripcion']; ?>"></textarea>
+                <textarea name="descripcion" style="height: 150px" class="form-control" id="floatingTextarea" ><?php if(isset($_POST['descripcion'])) echo $_POST['descripcion']; ?></textarea>
                 <label for="floatingTextarea">Descripción</label>
             </div>
         </div>

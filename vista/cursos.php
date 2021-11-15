@@ -59,7 +59,7 @@ $capacitacion = $curso->listarCapacitacion($buscar, $empieza, $fin);
                                         echo "<button type='button' class='btn btn-danger' style='margin-bottom:2%;margin-left:2%;'  onclick='despublicar(" . '"' . $cap->getCodigo() . '"' . ")'>Des publicar</button>";
                                     else
                                         echo "<button type='button' class='btn btn-primary' style='margin-bottom:2%;margin-left:2%;' onclick='cursos(" . '"' . $cap->getCodigo() . '"' . "," . '"publicar"' . ")'>Publicar</button>";
-                                    echo "<button type='button' class='btn btn-primary' style='margin-bottom:2%; margin-left:2%;'>Editar capacitacion</button>";
+                                    echo "<a href='../vista/?editar-capacitacion-id=".$cap->getId()."' class='btn btn-primary' style='margin-bottom:2%; margin-left:2%;'>Editar capacitacion</a>";
                                     echo "<a href='../vista/?editar-preguntas-capacitacion-id=".$cap->getId()."' class='btn btn-primary' style='margin-bottom:2%; margin-left:2%;'>Editar preguntas</a>"; ?>
                                     <script type="text/javascript">
                                         function despublicar(id) {

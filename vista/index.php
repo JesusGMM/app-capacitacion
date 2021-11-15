@@ -19,6 +19,8 @@
       require_once("resultados.php");
     }else if ((isset($_GET["crear-preguntas-capacitacion-id"])) || (isset($_GET["editar-preguntas-capacitacion-id"]))) {
       require_once("crear_preguntas.php");
+    }else if (isset($_GET["editar-capacitacion-id"])) {
+      require_once("editar_capacitacion.php");
     } else {
       require_once("cursos.php");
     }
@@ -26,3 +28,4 @@
     header("Location: ../login/");
   }
   require_once '../componentes/footer.php';
+  
