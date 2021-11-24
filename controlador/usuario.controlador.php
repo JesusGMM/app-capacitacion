@@ -9,11 +9,11 @@ class ControladorUsuario
   {
     if ($var == 1) {
       require_once("../modelo/conexion.php");
-      require_once("../modelo/usuario.modelo.php");
+      require_once("../modelo/UsuarioModelo.php");
       require_once("../clases/persona.php");
     } else {
       require_once("../../modelo/conexion.php");
-      require_once("../../modelo/usuario.modelo.php");
+      require_once("../../modelo/UsuarioModelo.php");
       require_once("../../clases/persona.php");
     }
 

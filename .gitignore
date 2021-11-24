@@ -1,1 +1,5 @@
 /vendor/
+*.log
+*.sql
+*.sqlite
+/modelo/conexion.php

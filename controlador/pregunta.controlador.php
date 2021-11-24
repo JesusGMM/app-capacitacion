@@ -8,10 +8,10 @@ class ControladorPregunta
     {
         if ($var == 1) {
             require_once("../clases/pregunta.php");
-            require_once("../modelo/preguntaModelo.php");
+            require_once("../modelo/PreguntaModelo.php");
         } else {
             require_once("../../clases/pregunta.php");
-            require_once("../../modelo/preguntaModelo.php");
+            require_once("../../modelo/PreguntaModelo.php");
         }
 
         $this->array = array();
