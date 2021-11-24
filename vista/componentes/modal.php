@@ -55,7 +55,6 @@ if (isset($_POST['accion'])) {
     }
     require_once "../../controlador/usuario.controlador.php";
     $user = new ControladorUsuario(2);
-    $usu = new Persona;
     $usu = $user->buscarUsuarios($_POST['id_usuario'], 2);
 ?>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

@@ -1,26 +1,37 @@
 <?php
-//foreach ($usu as $usuario) { 
+require_once "../../controlador/curso.controlador.php";
+foreach ($usu as $usuario) {
+
+    $curso = new ControladorCurso(2);
+    $capacitacion = $curso->listarCapacitacion("", "", "", 2);
 ?>
-<div class="container">
-    <form id="form-asignar">
-        <table class="table table-hover" style="text-align: center;">
-            <thead>
-                <tr>
-                    <th scope="col">Codigo</th>
-                    <th scope="col">Asignar</th>
-                    <th scope="col">Capacitación</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
+    <div class="container">
+        <form id="form-asignar">
+            <input type="hidden" name="id_usuario" value="<?php echo $usuario->getId(); ?>"/>
+            <table class="table table-hover" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th scope="col">Codigo</th>
+                        <th scope="col">Asignar</th>
+                        <th scope="col">Capacitación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($capacitacion as $cap) {
+                        $cap_asignada = $user->validarCurso($usuario->getId(), $cap->getId(), 2);
+                        if ($cap_asignada[0] == 3 && $cap->getEstado() == 1 ){
+                            echo '<tr><th scope="col">' . $cap->getCodigo();
 
-                    <td class="col"><input name="asignar[]" class="form-check-input" type="checkbox" value="id"> </td>
+                            echo '</th><td class="col"><input name="asignar[]" class="form-check-input" type="checkbox" value="'. $cap->getId().'">';
 
-                    <td class="col-md-8"> Equipo de computo</td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-</div>
-<?php  // }
+                            echo '</td><td class="col-md-8">' . $cap->getNombre();
+
+                            echo "</td></tr>";
+                        }
+                    } ?>
+                </tbody>
+            </table>
+        </form>
+    </div>
+<?php   }

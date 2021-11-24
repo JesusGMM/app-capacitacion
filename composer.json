@@ -1,0 +1,13 @@
+{
+    "name": "jesus/app_capacitacion",
+    "description": "Aplicacion de capacitar o realizar examenes",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jesus",
+            "email": "admin@ocresort.co"
+        }
+    ],
+    "require": {}
+}

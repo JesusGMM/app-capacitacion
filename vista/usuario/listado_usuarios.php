@@ -7,9 +7,8 @@ if (isset($_POST['buscar'])) {
     $fin = 10;
 }
 $user = new ControladorUsuario(1);
-$usuarios = new Persona;
 $usuarios = $user->listar($buscar, $empieza, $fin);
-// var_dump($usuarios);
+
 if (empty($usuarios)) {
     echo "<h3>No hay usuarios registrados</h3>";
 } else { ?>

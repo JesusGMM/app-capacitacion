@@ -98,7 +98,7 @@ class ModeloCurso
         return $array;
     }
 
-    
+
     // ACTUALIZAR UN CURSO
     function actualizar(Curso $curso)
     {
@@ -125,7 +125,7 @@ class ModeloCurso
             $actualizar->bindParam(":urlCap", $url, PDO::PARAM_STR);
             $actualizar->bindParam(":foto", $imagen, PDO::PARAM_STR);
             $actualizar->execute();
-            
+
             if ($actualizar->rowCount() > 0) {
                 $array[0] = 1;
                 $array[1] = "Capacitacion actualizada";
@@ -138,8 +138,8 @@ class ModeloCurso
             $array[0] = 2;
             $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
-            
-             echo $e->getLine();
+
+            echo $e->getLine();
             die("Error :" . $e->getMessage());
         }
         return $array;
@@ -276,19 +276,29 @@ class ModeloCurso
     function listar($busqueda, $empieza, $finaliza)
     {
         try {
+
             if (empty($busqueda) && (!empty(trim($finaliza)))) {
                 $sql = "SELECT * FROM capacitaciones ORDER BY id DESC limit :inicia, :fin ";
                 $consulta = $this->db->prepare($sql);
                 $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
                 $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
-               
-            } else if (((empty(trim($empieza))) && (empty(trim($finaliza))))) {
+            } else if (($empieza == 1) && ($busqueda == 1) && ($finaliza == 1)) {
+                $sql = "SELECT * FROM capacitaciones WHERE estado=:estado ORDER BY id";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":estado", $busqueda, PDO::PARAM_INT);
+            } else if ((!empty($busqueda)) && ((empty(trim($empieza))) && (empty(trim($finaliza))))) {
                 $sql = "SELECT * FROM capacitaciones WHERE id=:id_curso";
                 $consulta = $this->db->prepare($sql);
                 $consulta->bindParam(":id_curso", $busqueda, PDO::PARAM_INT);
-                
-            } else {
-                $sql = "SELECT * FROM capacitaciones WHERE id={$busqueda} ORDER BY id DESC limit :inicia, :fin ";
+            } else if (!empty($busqueda) && (!empty(trim($finaliza)))) {
+                $sql = "SELECT * FROM capacitaciones WHERE id=:id_curso ORDER BY id limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":id_curso", $busqueda, PDO::PARAM_INT);
+                $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+                $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+            } else if (empty($busqueda) && (empty(trim($finaliza)))) {
+                $sql = "SELECT * FROM capacitaciones ";
+                $consulta = $this->db->prepare($sql);
             }
             $consulta->execute();
             if ($consulta->rowCount() > 0) {
@@ -318,5 +328,76 @@ class ModeloCurso
             return $array;
             die("Error :" . $e->getMessage());
         }
+    }
+
+
+    function listarInscritos($id)
+    {
+        try {
+            $sql = "SELECT COUNT(id) FROM `capacitaciones_usuarios` WHERE id_capacitacion= :idCap";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":idCap", $id, PDO::PARAM_INT);
+            $consulta->execute();
+
+            if ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                return $fila['COUNT(id)'];
+            } else {
+                return 0;
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $array;
+            die("Error :" . $e->getMessage());
+        }
+    }
+
+
+    function listarCursosInscritos($tipo, $buscar, $empieza, $finaliza, $id)
+    {
+        try {
+            $estado = 1;
+            if ($tipo == 1) {
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` INNER JOIN capacitaciones_usuarios ON capacitaciones_usuarios.id_capacitacion = capacitaciones.id WHERE capacitaciones_usuarios.id_usuario =:idUsu AND capacitaciones.estado=:estado ORDER BY capacitaciones.id DESC limit :inicia, :fin";
+                $consulta = $this->db->prepare($sql);
+            } else {
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` INNER JOIN capacitaciones_usuarios ON capacitaciones_usuarios.id_capacitacion = capacitaciones.id WHERE capacitaciones_usuarios.id_usuario =:idUsu AND capacitaciones.estado=:estado AND (capacitaciones.nombre LIKE '%:buscar%'  OR capacitaciones.codigo LIKE '%:buscar%') ORDER BY capacitaciones.id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":buscar", $buscar, PDO::PARAM_STR);
+            }
+            $consulta->bindParam(":idUsu", $id, PDO::PARAM_INT);
+            $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+            $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+            $consulta->execute();
+
+            if ($consulta->rowCount() > 0) {
+                while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $capacitacion = new Curso();
+                    $capacitacion->setId($fila['id']);
+                    $capacitacion->setNombre($fila['nombre']);
+                    $capacitacion->setCodigo($fila['codigo']);
+                    $capacitacion->setDescripcion($fila['descripcion']);
+                    $capacitacion->setCan_pregutas($fila['numero_preguntas']);
+                    $capacitacion->setTiempo($fila['tiempo']);
+                    $capacitacion->setEstado($fila['estado']);
+                    $capacitacion->setUrl($fila['link_video']);
+                    $capacitacion->setImagen($fila['imagen']);
+                    $array[] = $capacitacion;
+                }
+            } else {
+                $array[0] = 3;
+                $array[1] =  "No tienes capacitaciones asignadas";
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
+        return $array;
     }
 }

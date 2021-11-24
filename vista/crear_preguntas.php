@@ -8,8 +8,6 @@ if (((isset($_GET['crear-preguntas-capacitacion-id'])) && (!empty(trim($_GET['cr
 
     $curso = new ControladorCurso(1);
     $pregunta_contro = new ControladorPregunta(1);
-    $capacitacion = new Curso;
-    $preguntas = new Curso;
     $capacitacion = $curso->buscarCapacitacion($id_capacitacion);
     if (is_object($capacitacion[0])) {
         foreach ($capacitacion as $cap) {
@@ -138,8 +136,6 @@ if (((isset($_GET['crear-preguntas-capacitacion-id'])) && (!empty(trim($_GET['cr
                                         }
                                     })
                                 }
-                            </script>
-                            <script>
                                 function Guardar(accion) {
                                     var form = $('#form-preguntas')[0];
                                     var formData = new FormData(form);

@@ -15,7 +15,7 @@ class ModeloUsuario
         } else {
             require_once("../../clases/persona.php");
         }
-
+        date_default_timezone_set('America/Bogota');
         $this->db = conectar::conexion();
         $this->personas = array();
     }
@@ -107,19 +107,21 @@ class ModeloUsuario
             $actualizar->bindParam(":rol", $rol, PDO::PARAM_INT);
             $actualizar->execute();
 
+            if (!empty(($contrasena))) {
+                $contrasena = hash('whirlpool', $contrasena);
+                $sql_contrasena = "UPDATE `usuarios` SET contrasena=:contrasena WHERE id = :id";
+                $actualizar_pasword = $this->db->prepare($sql_contrasena);
+                $actualizar_pasword->bindParam(":id", $id, PDO::PARAM_INT);
+                $actualizar_pasword->bindParam(":contrasena", $contrasena, PDO::PARAM_STR);
+                $actualizar_pasword->execute();
+                $actualizar_pasword->closeCursor();
+                $personas[] = 1;
+                $personas[] = "Contraseña actualizada";
+            }
             if ($actualizar->rowCount() > 0) {
-                if (!empty(($contrasena))) {
-                    $contrasena = hash('whirlpool', $contrasena);
-                    $sql_contrasena = "UPDATE `usuarios` SET contrasena=:contrasena WHERE id = :id";
-                    $actualizar_pasword = $this->db->prepare($sql_contrasena);
-                    $actualizar_pasword->bindParam(":id", $id, PDO::PARAM_INT);
-                    $actualizar_pasword->bindParam(":contrasena", $contrasena, PDO::PARAM_STR);
-                    $actualizar_pasword->execute();
-                    $actualizar_pasword->closeCursor();
-                }
                 $personas[] = 1;
                 $personas[] = "Usuario actualizado";
-            } else {
+            } else if (empty(($contrasena))) {
                 $personas[] = 3;
                 $personas[] = "Usuario no actualizado inténtelo nuevamente";
             }
@@ -176,7 +178,7 @@ class ModeloUsuario
                 $persona->setEmail($fila['correo']);
                 $persona->setRol($this->obtenerRol($fila['rol']));
                 $persona->setCapacitaiones($this->obtener_capacitaciones($fila['id']));
-                $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], "Realializado"));
+                $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], 2));
                 $personas[] = $persona;
                 return  $personas;
                 $consulta->closeCursor();
@@ -210,7 +212,7 @@ class ModeloUsuario
                 $persona->setNombre($fila['nombre']);
                 $persona->setApellido($fila['apellido']);
                 $persona->setCapacitaiones($this->obtener_capacitaciones($fila['id']));
-                $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], "Realializado"));
+                $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], 2));
                 $personas[] = $persona;
             }
             $consulta->closeCursor();
@@ -240,7 +242,7 @@ class ModeloUsuario
             $persona->setApellido($fila['apellido']);
             $persona->setRol($fila['rol']);
             $persona->setCapacitaiones($this->obtener_capacitaciones($fila['id']));
-            $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], "Realializado"));
+            $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], 2));
             $personas[] = $persona;
             $consulta->closeCursor();
             return $personas;
@@ -321,5 +323,394 @@ class ModeloUsuario
             return $personas;
             die("Error :" . $e->getMessage());
         }
+    }
+
+
+    // VALIDAR LAS CAPACITACIONES ASIGNADAS
+    function validarCapacitaciones($id, $codigo)
+    {
+        try {
+            $sql = "SELECT * FROM `capacitaciones_usuarios` WHERE id_usuario= :usuario AND id_capacitacion= :capacitacion";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":usuario", $id, PDO::PARAM_INT);
+            $consulta->bindParam(":capacitacion", $codigo, PDO::PARAM_INT);
+            $consulta->execute();
+
+            if ($consulta->rowCount() > 0) {
+                $array[0] = 1;
+                $array[1] =  "Este curso ya esta asignado";
+                if ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $array[2] =  $fila['estado'];
+                    $array[3] =  $fila['fecha_fin'];
+                    $array[4] =  $fila['estado_fase1'];
+                    $array[5] =  $fila['estado_fase3'];
+                }
+            } else {
+                $array[0] = 3;
+                $array[1] =  "Este curso no esta asignado"; //. $e->getLine();
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $array;
+            die("Error :" . $e->getMessage());
+        }
+        return  $array;
+    }
+
+    // ASIGNAR CAPACITACIONES
+    function asignarCapacitaciones($id_usuario, $capacitaciones)
+    {
+        try {
+            $fecha = date('Y-m-d H:i:s');
+            $estado = 0;
+            $sql = "INSERT INTO `capacitaciones_usuarios`(`id_usuario`, `id_capacitacion`, `estado`, `fecha_asignacion`) VALUES (:usuario, :codigo, :estado, :fecha)";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":usuario", $id_usuario, PDO::PARAM_INT);
+            $consulta->bindParam(":codigo", $capacitaciones, PDO::PARAM_INT);
+            $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            $consulta->bindParam(":fecha", $fecha, PDO::PARAM_STR);
+            $consulta->execute();
+            if ($consulta->rowCount() > 0) {
+                $personas[0] = 1;
+                $personas[1] = "Capacitaciones asignadas";
+            } else {
+                $personas[0] = 3;
+                $personas[1] = "Capacitaciones no asignadas inténtelo nuevamente";
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    // QUITAR LAS CAPACITACIONES AL USUARIO
+    function desAsignarCapacitaciones($id_usuario, $capacitaciones)
+    {
+        try {
+            $sql_eliminar = "DELETE FROM `capacitaciones_usuarios` WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
+            $eliminar = $this->db->prepare($sql_eliminar);
+            $eliminar->bindParam(":idUsu", $id_usuario, PDO::PARAM_INT);
+            $eliminar->bindParam(":idCap", $capacitaciones, PDO::PARAM_INT);
+            $eliminar->execute();
+            if ($eliminar->rowCount() > 0) {
+                $personas[0] = 1;
+                $personas[1] = "Capacitacion eliminada";
+            } else {
+                $personas[0] = 2;
+                $personas[1] = "La capacitacion no se pudo eliminar inténtelo nuevamente";
+            }
+            $eliminar->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function iniciarCapacitaciones($id_usuario, $id_capacitacion, $duracion, $estado)
+    {
+        try {
+            $fecha = date('Y-m-d H:i:s');
+            $fechaAuxiliar = strtotime("{$duracion} minutes", strtotime($fecha));
+            $fechaSalida = date('Y-m-d H:i:s', $fechaAuxiliar);
+
+            $sql_actualizar = "UPDATE capacitaciones_usuarios SET estado=:ini,fecha_inicio=:inicia,fecha_fin=:finaliza WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
+            $actualizar = $this->db->prepare($sql_actualizar);
+            $actualizar->bindParam(":idUsu", $id_usuario, PDO::PARAM_INT);
+            $actualizar->bindParam(":idCap", $id_capacitacion, PDO::PARAM_INT);
+            $actualizar->bindParam(":ini", $estado, PDO::PARAM_INT);
+            $actualizar->bindParam(":inicia", $fecha, PDO::PARAM_STR);
+            $actualizar->bindParam(":finaliza", $fechaSalida, PDO::PARAM_STR);
+            $actualizar->execute();
+            if ($actualizar->rowCount() > 0) {
+                $personas[0] = 1;
+                $personas[1] = "Examen iniciado";
+                $personas[2] = $duracion;
+            } else {
+                $personas[0] = 2;
+                $personas[1] = "El examen no se pudo iniciar inténtelo nuevamente";
+            }
+            $actualizar->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function reiniciarCapacitaciones($id_usuario, $id_capacitacion)
+    {
+        try {
+            $array = $this->validarCapacitaciones($id_usuario, $id_capacitacion);
+            if ($array[0] == 1) {
+                if ($array[0] != 2) {
+                    $personas[0] = 1;
+                    $personas[1] = "Examen reiniciado";
+                } else {
+                    $personas[0] = 1;
+                    $personas[1] = "Ya el examen a finalizado";
+                }
+                // $fecha = strtotime(date('Y-m-d H:i:s'));
+                // $fecha_fin = strtotime($array[3]);
+                // $duracion = round(abs($fecha_fin - $fecha) / 60,2);
+                // if ($fecha_fin > $fecha) {
+
+                //     $personas[2] = $duracion;
+
+                // } else {
+                //     $estado = 2;
+                //     $sql_actualizar = "UPDATE capacitaciones_usuarios SET estado=:ini WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
+                //     $actualizar = $this->db->prepare($sql_actualizar);
+                //     $actualizar->bindParam(":idUsu", $id_usuario, PDO::PARAM_INT);
+                //     $actualizar->bindParam(":idCap", $id_capacitacion, PDO::PARAM_INT);
+                //     $actualizar->bindParam(":ini", $estado, PDO::PARAM_INT);
+                //     $actualizar->execute();
+                //     if ($actualizar->rowCount() > 0) {
+                //         $personas[0] = 3;
+                //         $personas[1] = "El tiempo del examen ya finalizo";
+                //         $personas[2] = 0;
+                //     } else {
+                //         $personas[0] = 2;
+                //         $personas[1] = "El examen no se pudo reiniciar inténtelo nuevamente";
+                //     }
+                //     $actualizar->closeCursor();          
+                // }
+            } else {
+                $personas[0] = 3;
+                $personas[1] = "Este examen ya no esta en su lista";
+            }
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function guardarRespuesta($idUsuario, $idCap, $idPregunta, $respuesta, $fase)
+    {
+        try {
+            $sql = "INSERT INTO `respuestas`(`id_usuario`, `id_capacitacion`, `id_pregunta`, `respuesta`, `fase`) VALUES (:usuario, :capacitacion, :pregunta, :respuesta, :fase)";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":usuario", $idUsuario, PDO::PARAM_INT);
+            $consulta->bindParam(":capacitacion", $idCap, PDO::PARAM_INT);
+            $consulta->bindParam(":pregunta", $idPregunta, PDO::PARAM_INT);
+            $consulta->bindParam(":respuesta", $respuesta, PDO::PARAM_STR);
+            $consulta->bindParam(":fase", $fase, PDO::PARAM_INT);
+            $consulta->execute();
+            if ($consulta->rowCount() > 0) {
+                $estado = 2;
+                if ($fase == 1)
+                    $sql_actualizar = "UPDATE capacitaciones_usuarios SET estado_fase1=:ini WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
+                else
+                    $sql_actualizar = "UPDATE capacitaciones_usuarios SET estado=:fin, estado_fase3=:ini WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
+
+                $actualizar = $this->db->prepare($sql_actualizar);
+                $actualizar->bindParam(":idUsu", $idUsuario, PDO::PARAM_INT);
+                $actualizar->bindParam(":idCap", $idCap, PDO::PARAM_INT);
+                $actualizar->bindParam(":ini", $estado, PDO::PARAM_INT);
+                if ($fase == 3)
+                    $actualizar->bindParam(":fin", $estado, PDO::PARAM_INT);
+                $actualizar->execute();
+
+                $personas[0] = 1;
+                $personas[1] = "Fase {$fase} registrada y completada";
+            } else {
+                $personas[0] = 3;
+                $personas[1] = "La fase {$fase} no se pudo registrar inténtelo nuevamente";
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function actualizarRespuesta($idUsuario, $idCap, $idPregunta, $respuesta, $fase)
+    {
+        try {
+            $sql = "UPDATE `respuestas` SET `respuesta`=:res WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap AND `id_pregunta`=:idPregunta AND `fase`=:fase";
+            $actualizar = $this->db->prepare($sql);
+            $actualizar->bindParam(":res", $respuesta, PDO::PARAM_STR);
+            $actualizar->bindParam(":idUsu", $idUsuario, PDO::PARAM_INT);
+            $actualizar->bindParam(":idCap", $idCap, PDO::PARAM_INT);
+            $actualizar->bindParam(":idPregunta", $idPregunta, PDO::PARAM_INT);
+            $actualizar->bindParam(":fase", $fase, PDO::PARAM_INT);
+            $actualizar->execute();
+
+            if ($actualizar->rowCount() > 0) {
+                $estado = 2;
+                if ($fase == 1)
+                    $sql_actualizar = "UPDATE capacitaciones_usuarios SET estado_fase1=:ini WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
+                else
+                    $sql_actualizar = "UPDATE capacitaciones_usuarios SET estado=:fin, estado_fase3=:ini WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
+                $actualizar_curso = $this->db->prepare($sql_actualizar);
+                $actualizar_curso->bindParam(":idUsu", $idUsuario, PDO::PARAM_INT);
+                $actualizar_curso->bindParam(":idCap", $idCap, PDO::PARAM_INT);
+                $actualizar_curso->bindParam(":ini", $estado, PDO::PARAM_INT);
+                if ($fase == 3)
+                    $actualizar_curso->bindParam(":fin", $estado, PDO::PARAM_INT);
+                $actualizar_curso->execute();
+
+                $personas[0] = 1;
+                $personas[1] = "Fase {$fase} registrada y completada";
+
+                $actualizar_curso->closeCursor();
+            } else {
+                $personas[0] = 3;
+                $personas[1] = "La fase {$fase} no se pudo registrar inténtelo nuevamente";
+            }
+            $actualizar->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function limpiarRespuesta($idUsuario, $idCap, $fase)
+    {
+        try {
+            $respuesta = "";
+            $sql = "UPDATE `respuestas` SET `respuesta`=:res WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap AND `fase`=:fase";
+            $actualizar = $this->db->prepare($sql);
+            $actualizar->bindParam(":res", $respuesta, PDO::PARAM_STR);
+            $actualizar->bindParam(":idUsu", $idUsuario, PDO::PARAM_INT);
+            $actualizar->bindParam(":idCap", $idCap, PDO::PARAM_INT);
+            $actualizar->bindParam(":fase", $fase, PDO::PARAM_INT);
+            $actualizar->execute();
+            if ($actualizar->rowCount() > 0) {
+                $personas[0] = 1;
+                $personas[1] = "Respuestas limpiadas";
+            } else {
+                $personas[0] = 3;
+                $personas[1] = "Las respuestas no se pudo limpiar inténtelo nuevamente";
+            }
+            $actualizar->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function resultadosExamen($id, $codigo, $cantidad)
+    {
+        try {
+            $sql = "SELECT * FROM `respuestas` WHERE `id_usuario`=:usuario AND `id_capacitacion`=:idcapa";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":usuario", $id, PDO::PARAM_INT);
+            $consulta->bindParam(":idcapa", $codigo, PDO::PARAM_INT);
+            $consulta->execute();
+            if ($consulta->rowCount() > 0) {
+                $pregunta_contro = new ControladorPregunta(1);
+                $preguntas = $pregunta_contro->buscarPregunta($codigo, "", "");
+                $respuesta_corecta_fase1 = 0;
+                $respuesta_incorecta_fase1 = 0;
+                $respuesta_corecta_fase3 = 0;
+                $respuesta_incorecta_fase3 = 0;
+                while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    if ($fila['fase'] == 1) {
+                        foreach ($preguntas as $pregunta) {
+                            if ($fila['id_pregunta'] == $pregunta->getId()) {
+                                if ($fila['respuesta'] == $pregunta->getRespuesta_corecta())
+                                    $respuesta_corecta_fase1 = 1 + $respuesta_corecta_fase1;
+                                else
+                                    $respuesta_incorecta_fase1 = 1 + $respuesta_incorecta_fase1;
+                            }
+                        }
+                    } else {
+                        foreach ($preguntas as $pregunta) {
+                            if ($fila['id_pregunta'] == $pregunta->getId()) {
+                                if ($fila['respuesta'] == $pregunta->getRespuesta_corecta())
+                                    $respuesta_corecta_fase3 = 1 + $respuesta_corecta_fase3;
+                                else
+                                    $respuesta_incorecta_fase3 = 1 + $respuesta_incorecta_fase3;
+                            }
+                        }
+                    }
+                }
+                if ($cantidad == ($respuesta_corecta_fase1 + $respuesta_incorecta_fase1))
+                    $respuesta_sin_responder_fase1 = 0;
+                else
+                    $respuesta_sin_responder_fase1 = $cantidad - ($respuesta_corecta_fase1 + $respuesta_incorecta_fase1);
+
+                if ($cantidad == ($respuesta_corecta_fase3 + $respuesta_incorecta_fase3))
+                    $respuesta_sin_responder_fase3 = 0;
+                else
+                    $respuesta_sin_responder_fase3 = $cantidad - ($respuesta_corecta_fase3 + $respuesta_incorecta_fase3);
+
+                $porcentaje_fase1 = ($respuesta_corecta_fase1 / $cantidad) * 100;
+                $porcentaje_fase3 = ($respuesta_corecta_fase3 / $cantidad) * 100;
+                $total = ($porcentaje_fase1 + $porcentaje_fase3) / 2;
+                unset($personas);
+                $personas[] = "fase 1";
+                $personas[] = $respuesta_corecta_fase1;
+                $personas[] = $respuesta_incorecta_fase1;
+                $personas[] = $respuesta_sin_responder_fase1;
+                $personas[] = $porcentaje_fase1;
+                $personas[] = "fase 3";
+                $personas[] = $respuesta_corecta_fase3;
+                $personas[] = $respuesta_incorecta_fase3;
+                $personas[] = $respuesta_sin_responder_fase3;
+                $personas[] = $porcentaje_fase3;
+                $personas[] = $total;
+            } else {
+                $personas[0] = 3;
+                $personas[1] = "No ha resuelto el examen inténtelo nuevamente";
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function listarRespuesta($usuario, $capacitacio, $fase)
+    {
+        try {
+            $sql = "SELECT * FROM `respuestas` WHERE `id_usuario`=:usuario AND `id_capacitacion`=:idcapa AND `fase`=:idfase";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":usuario", $usuario, PDO::PARAM_INT);
+            $consulta->bindParam(":idcapa", $capacitacio, PDO::PARAM_INT);
+            $consulta->bindParam(":idfase", $fase, PDO::PARAM_INT);
+            $consulta->execute();
+            if ($consulta->rowCount() > 0) {
+                while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $personas[] = $fila;
+                }
+                $consulta->closeCursor();
+            } else {
+                $personas[0] = 3;
+                $personas[1] = "No ha resuelto el examen inténtelo nuevamente";
+            }
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $personas;
+            die("Error :" . $e->getMessage());
+        }
+        return $personas;
     }
 }

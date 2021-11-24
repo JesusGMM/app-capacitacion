@@ -1,5 +1,4 @@
 <?php
-require_once '../componentes/heder.php';
 require_once 'componentes/nav.php';
 ?>
 <div class="container" style="padding-top: 4rem;">
@@ -47,4 +46,3 @@ require_once 'componentes/nav.php';
     </div>
 </div>
 <?php
- require_once '../componentes/footer.php';

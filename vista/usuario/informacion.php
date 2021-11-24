@@ -36,8 +36,16 @@ foreach ($usu as $usuario) { ?>
                     <td class="col-md-8"> <?php echo $usuario->getCap_realizadas(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Porcentaje de resultados:</b></td>
-                    <td class="col-md-8"> 80% de 100%</td>
+                    <td class="col-md-4"><b>Nivel de completado:</b></td>
+                    <td class="col-md-8">
+                        <?php
+                        if ($usuario->getCapacitaiones() == 0)
+                            echo 0;
+                        else
+                            echo ($usuario->getCap_realizadas() / ($usuario->getCapacitaiones()) * 100);
+
+                        ?>%
+                    </td>
                 </tr>
             </tbody>
         </table>

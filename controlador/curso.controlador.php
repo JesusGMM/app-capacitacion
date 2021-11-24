@@ -59,6 +59,20 @@ class ControladorCurso
         $cursoMo = new ModeloCurso(1);
         $array = $cursoMo->validarCurso($arr['codigo']);
         if (($array[0] == 3 && $array[3] == $arr['id_cap']) || $array[0] == 1) {
+          $aray = $cursoMo->buscarCurso($arr['id_cap']);
+          require_once "../controlador/pregunta.controlador.php";
+          $controlPre =  new ControladorPregunta(1);
+          if ($aray[0]->getCan_pregutas() < $arr["cantidad"]) {
+            $numero = $arr["cantidad"] - $aray[0]->getCan_pregutas();
+            $aray = $controlPre->crearPregunta($arr['id_cap'], $numero);
+          } else if ($aray[0]->getCan_pregutas() > $arr["cantidad"]) {
+            $numero =  $aray[0]->getCan_pregutas() - $arr["cantidad"];
+            for ($i = 0; $i < $numero; $i++) {
+              $aray = $controlPre->buscarPregunta($arr['id_cap'], $arr["cantidad"], 1);
+              $id_pregunta = ["id_pregunta" => $aray[0]->getId()];
+              $aray = $controlPre->eliminarPregunta($id_pregunta, 3);
+            }
+          }
           $curso = new curso();
           $curso->setId($arr["id_cap"]);
           $curso->setNombre($arr["titulo"]);
@@ -104,10 +118,15 @@ class ControladorCurso
       $cursoMo = new ModeloCurso(2);
       $array = $cursoMo->validarCurso($arr["codigo"]);
       if ($array[0] == 3) {
-        $curso = new curso();
-        $curso->setCodigo($arr["codigo"]);
-        $curso->setEstado($estado);
-        $array =  $cursoMo->actualizarEstado($curso);
+        require_once "../../controlador/pregunta.controlador.php";
+        $controlPre =  new ControladorPregunta(2);
+        $array =  $controlPre->validarRespuestasCompletas($array[3], 2);
+        if ($array[0] == 1) {
+          $curso = new curso();
+          $curso->setCodigo($arr["codigo"]);
+          $curso->setEstado($estado);
+          $array =  $cursoMo->actualizarEstado($curso);
+        }
       }
     } else {
       $array[] = 2;
@@ -151,12 +170,6 @@ class ControladorCurso
     }
     return $array;
   }
-  function publicar($id)
-  {
-  }
-  function desPublicar($id)
-  {
-  }
 
   function buscarCapacitacion($id)
   {
@@ -170,10 +183,26 @@ class ControladorCurso
     return $array;
   }
 
-  function listarCapacitacion($buscar, $empieza, $por_pagina)
+  function listarCapacitacion($buscar, $empieza, $por_pagina, $var)
+  {
+    $cursoMo = new ModeloCurso($var);
+    return  $cursoMo->listar(trim($buscar), $empieza, $por_pagina);
+  }
+
+
+  function listarCapacitacionEstudiante($buscar, $empieza, $por_pagina, $id)
   {
     $cursoMo = new ModeloCurso(1);
-    return  $cursoMo->listar(trim($buscar), $empieza, $por_pagina);
+    if (empty($buscar))
+      return $cursoMo->listarCursosInscritos(1, $buscar, $empieza, $por_pagina, $id);
+    else
+      return $cursoMo->listarCursosInscritos(2, $buscar, $empieza, $por_pagina, $id);
+  }
+
+  function cantidadInscritos($buscar)
+  {
+    $cursoMo = new ModeloCurso(1);
+    return  $cursoMo->listarInscritos($buscar);
   }
 
   function validarDatoCurso($arr)

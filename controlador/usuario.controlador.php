@@ -52,7 +52,6 @@ class ControladorUsuario
   function listar($buscar, $empieza, $por_pagina)
   {
     $personaMo = new ModeloUsuario(1);
-
     if (empty(trim($buscar))) {
       return $personaMo->listar($empieza, $por_pagina);
     } else {
@@ -104,6 +103,98 @@ class ControladorUsuario
       $personaMo = new ModeloUsuario(2);
       return $personaMo->eliminar(trim($id));
     }
+  }
+
+  function validarCurso($id, $codigo, $var)
+  {
+    $personaMo = new ModeloUsuario($var);
+    return $personaMo->validarCapacitaciones($id, $codigo);
+  }
+
+  function asignar($arr, $var)
+  {
+    $personaMo = new ModeloUsuario($var);
+    foreach ($arr['asignar'] as $codigo) {
+      $array = $personaMo->asignarCapacitaciones($arr['id_usuario'], $codigo);
+    }
+    return $array;
+  }
+
+  function quitarCapacitacion($arr, $var)
+  {
+    $personaMo = new ModeloUsuario($var);
+    return $personaMo->desAsignarCapacitaciones($arr['usuario'], $arr['codigo']);
+  }
+
+  function iniciarExamen($id, $codigo)
+  {
+    $curso = new ControladorCurso(1);
+    $capacitacion = $curso->buscarCapacitacion($codigo);
+    if (is_object($capacitacion[0])) {
+      $personaMo = new ModeloUsuario(1);
+      return $personaMo->iniciarCapacitaciones($id, $codigo, $capacitacion[0]->getTiempo(), 0);
+    } else {
+      return $capacitacion;
+    }
+  }
+
+  function reiniciarExamen($id, $codigo)
+  {
+    $curso = new ControladorCurso(1);
+    $capacitacion = $curso->buscarCapacitacion($codigo);
+    if (is_object($capacitacion[0])) {
+      $personaMo = new ModeloUsuario(1);
+      return $personaMo->reiniciarCapacitaciones($id, $codigo);
+    } else {
+      return $capacitacion;
+    }
+  }
+
+  function guardarRespuesta($arr, $var)
+  {
+    $personaMo = new ModeloUsuario($var);
+    $validar = false;
+    foreach ($arr as $clave => $pregun) {
+      if (is_numeric($clave)) {
+        $validar = true;
+        $array = $personaMo->guardarRespuesta($arr['id_usuario'], $arr['id_capacitacion'], $clave, $pregun, $arr['fase']);
+      }
+    }
+    if ($validar == false) {
+      $array[0] = 2;
+      $array[1] = "No has respondido ninguna pregunta";
+    }
+    return $array;
+  }
+
+
+  function actualizarRespuesta($arr, $var)
+  {
+    $personaMo = new ModeloUsuario($var);
+    $array = $personaMo->limpiarRespuesta($arr['id_usuario'], $arr['id_capacitacion'], $arr['fase']);
+    if ($array[0] == 1 || $array[0] == 3) {
+      foreach ($arr as $clave => $pregun) {
+        if (is_numeric($clave)) {
+          $respuesta = $personaMo->actualizarRespuesta($arr['id_usuario'], $arr['id_capacitacion'], $clave, $pregun, $arr['fase']);
+          if ($respuesta[0] == 1) {
+            $array = $respuesta;
+          }
+        }
+      }
+    }
+    return $array;
+  }
+
+  function resultados($id, $codigo, $cantidad, $var)
+  {
+    $personaMo = new ModeloUsuario($var);
+    return $personaMo->resultadosExamen($id, $codigo, $cantidad);
+  }
+
+  function listarRespuesta($id, $codigo, $var)
+  {
+    $personaMo = new ModeloUsuario(1);
+    return $personaMo->listarRespuesta($id, $codigo, $var);
   }
 }
 

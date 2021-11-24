@@ -1,13 +1,12 @@
 <?php
-require_once '../componentes/heder.php';
-//require_once 'componentes/nav.php';
+require_once 'componentes/nav.php';
 if (isset($_GET['editar-capacitacion-id'])) {
     $curso = new ControladorCurso(1);
     if (isset($_POST['codigo'])) {
         $registro = $curso->actualizarCapacitacion($_POST);
     } else {
         $registro[0] = 0;
-        $cap = $curso->listarCapacitacion($_GET['editar-capacitacion-id'], "", "");
+        $cap = $curso->listarCapacitacion($_GET['editar-capacitacion-id'], "", "",1);
     }
 
     if ($registro[0] == 1) { ?>
@@ -68,18 +67,31 @@ if (isset($_GET['editar-capacitacion-id'])) {
             </div>
             <div class="col-md-6" style="margin-top:2%">
                 <label for="inputState" class="form-label">Estado</label>
-                <select name="estado" id="inputState" class="form-select">
-                    <option value="2" selected>Guardar en borrador</option>
-                    <option value="1">Publicar capacitación</option>
+                <select name="estado" id="inputState" class="form-select" >
+                <?php
+                if (isset($_POST['estado'])) {
+                    if ($_POST['estado'] == '1')
+                        echo ' <option value="1">Publicada</option>';
+                    else
+                        echo '<option value="2">En Borrador</option>';
+                } else {
+                    if ($cap[0]->getEstado() == '1')
+                    echo ' <option value="1">Publicada</option>';
+                    else
+                        echo '<option value="2">En Borrador</option>';
+                } ?>
+                
+                    
+                   
                 </select>
             </div>
             <div class="col-md-6" style="margin-top:2%">
-                <label for="inputAddress3" class="form-label">Cantidad de preguntas</label>
+                <label for="inputAddress3" class="form-label" style="width: 100%;">Cantidad de preguntas <label style="margin-left: 15%;"> <b>Nota: </b>Al disminuir se eliminan las ultimas </label> </label>
                 <input type="number" class="form-control" name="cantidad" id="inputAddress3" min="1" placeholder="Numero de preguntas" value="<?php if (isset($_POST['cantidad'])) echo $_POST['cantidad'];
                                                                                                                                                 else echo $cap[0]->getCan_pregutas(); ?>" required>
             </div>
             <div class="col-md-6" style="margin-top:2%">
-                <label for="url" class="form-label">Nueva Url del video <b>Ayuda: </b> <a href="https://localhost/app_capacitacion/vista/" target="_blank" style="margin-bottom:2%"> Como copiar una URL</a> </label>
+                <label for="url" class="form-label" style="width: 100%;">Nueva Url del video <label style="margin-left: 35%;"> <b>Ayuda: </b> <a href="https://localhost/app_capacitacion/vista/" target="_blank" style="margin-bottom:2%"> Como copiar una URL</a></label> </label>
                 <div class="form-floating">
                     <textarea name="url" style="height: 150px" class="form-control" id="Textarea"><?php if (isset($_POST['url'])) echo $_POST['url'];
                                                                                                     else echo $cap[0]->getUrl(); ?></textarea>
@@ -198,4 +210,4 @@ if (isset($_GET['editar-capacitacion-id'])) {
     </script>
 <?php
 }
-require_once '../componentes/footer.php';
+

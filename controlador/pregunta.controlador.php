@@ -80,4 +80,15 @@ class ControladorPregunta
         $preguntaModel = new ModeloPregunta(2);
         return $preguntaModel->eliminarTodas($id);
     }
+
+    function validarRespuestasCompletas($id,$var){
+      if (is_numeric($id)) {
+            $preguntaModel = new ModeloPregunta($var);
+            return $preguntaModel->preguntasCompletas($id,"");
+        } else {
+            $array[0] = 2;
+            $array[1]  = "Las preguntas de este curso no son validas";
+        }
+        return $array;
+    }
 }

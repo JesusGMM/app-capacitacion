@@ -1,5 +1,4 @@
 <?php
-require_once '../componentes/heder.php';
 require_once 'componentes/nav.php';
 $curso = new ControladorCurso(1);
 $registro = $curso->crear($_POST);
@@ -59,8 +58,7 @@ if ($registro[0] == 1) { ?>
         <div class="col-md-6" style="margin-top:2%">
             <label for="inputState" class="form-label">Estado</label>
             <select name="estado" id="inputState" class="form-select">
-                <option value="2" selected>Guardar en borrador</option>
-                <option value="1">Publicar capacitación</option>
+                <option value="2" selected>En borrador</option>
             </select>
         </div>
         <div class="col-md-6" style="margin-top:2%">
@@ -154,5 +152,3 @@ if ($registro[0] == 1) { ?>
     </form>       
 </div>
 
-<?php
-require_once '../componentes/footer.php';

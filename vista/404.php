@@ -1,0 +1,1 @@
+<img style="height: 100vh; width: 100%;" src="../componentes/img/Error404.jpg" alt="sin imagen"/>

@@ -11,7 +11,7 @@ class ModeloPregunta
     {
         if ($var == 1) {
             require_once("../clases/pregunta.php");
-        } else if ($var == 2){
+        } else if ($var == 2) {
             require_once("../../clases/pregunta.php");
         }
         require_once("conexion.php");
@@ -88,68 +88,73 @@ class ModeloPregunta
     }
 
 
-        //ELIMINAR PREGUNTA
-        function eliminar($id)
-        {
-            try {
-                $sql_eliminar = "DELETE FROM preguntas WHERE id=:id";
-                $eliminar = $this->db->prepare($sql_eliminar);
-                $eliminar->bindParam(":id", $id, PDO::PARAM_INT);
-                $eliminar->execute();
-                if ($eliminar->rowCount() > 0) {
-                    $array[] = 1;
-                    $array[] = "Pregunta eliminada";
-                } else {
-                    $array[] = 3;
-                    $array[] = "Pregunta no eliminada inténtelo nuevamente";
-                }
-            } catch (Exception $e) {
-                $array[0] = 2;
-                $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-                return $array;
-                die("Error :" . $e->getMessage());
+    //ELIMINAR PREGUNTA
+    function eliminar($id)
+    {
+        try {
+            $sql_eliminar = "DELETE FROM preguntas WHERE id=:id";
+            $eliminar = $this->db->prepare($sql_eliminar);
+            $eliminar->bindParam(":id", $id, PDO::PARAM_INT);
+            $eliminar->execute();
+            if ($eliminar->rowCount() > 0) {
+                $array[] = 1;
+                $array[] = "Pregunta eliminada";
+            } else {
+                $array[] = 3;
+                $array[] = "Pregunta no eliminada inténtelo nuevamente";
             }
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
+            die("Error :" . $e->getMessage());
         }
+        return $array;
+    }
 
-
-        function eliminarTodas($id){
-            try {
-                $sql_eliminar = "DELETE FROM preguntas WHERE id_capacitacion=:id";
-                $eliminar = $this->db->prepare($sql_eliminar);
-                $eliminar->bindParam(":id", $id, PDO::PARAM_INT);
-                $eliminar->execute();
-                if ($eliminar->rowCount() > 0) {
-                    $array[] = 1;
-                    $array[] = "Preguntas eliminadas";
-                } else {
-                    $array[] = 3;
-                    $array[] = "Preguntas no eliminadas inténtelo nuevamente";
-                }
-            } catch (Exception $e) {
-                $array[0] = 2;
-                $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-                return $array;
-                die("Error :" . $e->getMessage());
+    //ELIMINAR TODAS LAS PREGUNTAS
+    function eliminarTodas($id)
+    {
+        try {
+            $sql_eliminar = "DELETE FROM preguntas WHERE id_capacitacion=:id";
+            $eliminar = $this->db->prepare($sql_eliminar);
+            $eliminar->bindParam(":id", $id, PDO::PARAM_INT);
+            $eliminar->execute();
+            if ($eliminar->rowCount() > 0) {
+                $array[] = 1;
+                $array[] = "Preguntas eliminadas";
+            } else {
+                $array[] = 3;
+                $array[] = "Preguntas no eliminadas inténtelo nuevamente";
             }
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
+            die("Error :" . $e->getMessage());
         }
+        return $array;
+    }
 
     // BUSCAR UN CURSO
     function buscar($id_cap, $empieza, $finaliza)
     {
         try {
-
-            $sql = "SELECT * FROM preguntas WHERE id_capacitacion= :id_pregunta ORDER BY id LIMIT :inicia, :fin";
-            $consulta = $this->db->prepare($sql);
-            $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
-            $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
-            $consulta->bindParam(":id_pregunta", $id_cap, PDO::PARAM_INT);
+            if (empty($finaliza)) {
+                $sql = "SELECT * FROM preguntas WHERE id_capacitacion= :id_pregunta ORDER BY id";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":id_pregunta", $id_cap, PDO::PARAM_INT);
+            } else {
+                $sql = "SELECT * FROM preguntas WHERE id_capacitacion= :id_pregunta ORDER BY id LIMIT :inicia, :fin";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+                $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+                $consulta->bindParam(":id_pregunta", $id_cap, PDO::PARAM_INT);
+            }
 
             $consulta->execute();
-
             if ($consulta->rowCount() > 0) {
-                $fila = $consulta->fetch(PDO::FETCH_ASSOC);
+               while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
                 $pregunta = new Pregunta();
                 $pregunta->setId($fila['id']);
                 $pregunta->setId_capacitacion($fila['id_capacitacion']);
@@ -160,10 +165,39 @@ class ModeloPregunta
                 $pregunta->setRespuesta4($fila['respuesta_D']);
                 $pregunta->setRespuesta_corecta($fila['respuesta_correcta']);
                 $array[] = $pregunta;
-                $consulta->closeCursor();
+               }
             } else {
                 $array[0] = 3;
                 $array[1] =  "Este curso no tiene preguntas"; //. $e->getLine();
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            return $array;
+            die("Error :" . $e->getMessage());
+        }
+        return  $array;
+    }
+
+
+    function preguntasCompletas($id, $nombre)
+    {
+
+        try {
+            $sql = "SELECT * FROM preguntas WHERE id_capacitacion=:id_curso and `respuesta_correcta`=:buscar";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":id_curso", $id, PDO::PARAM_INT);
+            $consulta->bindParam(":buscar", $nombre, PDO::PARAM_STR);
+            $consulta->execute();
+
+            if ($consulta->rowCount() > 0) {
+                $array[0] = 3;
+                $array[1] =  "Este curso no tiene todas las preguntas completadas"; //. $e->getLine();
+
+            } else {
+                $array[0] = 1;
+                $array[1] =  "Preguntas completadas";
             }
             $consulta->closeCursor();
         } catch (Exception $e) {

@@ -18,7 +18,7 @@ foreach ($usu as $usuario) { ?>
             <label for="perfil" class="form-label">Tipo de usuario</label>
             <select name="perfil" id="perfil" class="form-select" required>
                 <option value='1'>Administrador</option>
-                <option value='2' <?php if ($usuario->getRol() == "Capacitante") echo "selected"; ?>>A Capacitar</option>
+                <option value='2' <?php if ($usuario->getRol() == "Capacitante") echo "selected"; ?>>Estudiante</option>
             </select>
         </div>
         <div class="col-md-6">

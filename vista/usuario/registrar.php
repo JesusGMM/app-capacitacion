@@ -74,8 +74,8 @@ if ($registro[0] == 1) { ?>
             <input name="usuario" type="text" class="form-control" id="inputAddress" placeholder="Ejemplo Pepito001" required>
         </div>
         <div class="col-6">
-            <label for="inputAddress2" class="form-label">Codigo del usuario</label>
-            <input name="codigo" type="text" class="form-control" id="inputAddress2" placeholder="Codigo" value="<?php if(isset($_POST['codigo'])) echo $_POST['codigo']; ?>" required>
+            <label for="inputAddress2" class="form-label">Codigo o numero de identificación</label>
+            <input name="codigo" type="text" class="form-control" id="inputAddress2" placeholder="Cedula" value="<?php if(isset($_POST['codigo'])) echo $_POST['codigo']; ?>" required>
         </div>
 
         <div class="col-12">
