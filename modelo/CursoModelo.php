@@ -273,30 +273,48 @@ class ModeloCurso
     }
 
     // LISTAR TODOS LOS CURSOS 
-    function listar($busqueda, $empieza, $finaliza)
+    function listar($busqueda, $estado, $empieza, $finaliza)
     {
         try {
 
-            if (empty($busqueda) && (!empty(trim($finaliza)))) {
+            if (empty($busqueda) && (!empty(trim($finaliza))) && (empty(trim($estado)))) {
                 $sql = "SELECT * FROM capacitaciones ORDER BY id DESC limit :inicia, :fin ";
                 $consulta = $this->db->prepare($sql);
                 $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
                 $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
-            } else if (($empieza == 1) && ($busqueda == 1) && ($finaliza == 1)) {
-                $sql = "SELECT * FROM capacitaciones WHERE estado=:estado ORDER BY id";
+            } else if (($busqueda == 1) && (!empty(trim($finaliza))) && (empty(trim($estado)))) {
+                $sql = "SELECT * FROM capacitaciones WHERE estado=:estado ORDER BY id DESC limit :inicia, :fin ";
                 $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+                $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
                 $consulta->bindParam(":estado", $busqueda, PDO::PARAM_INT);
-            } else if ((!empty($busqueda)) && ((empty(trim($empieza))) && (empty(trim($finaliza))))) {
+            } else if ((!empty($busqueda)) && ((empty(trim($empieza))) && (empty(trim($finaliza)))) && (empty(trim($estado)))) {
                 $sql = "SELECT * FROM capacitaciones WHERE id=:id_curso";
                 $consulta = $this->db->prepare($sql);
                 $consulta->bindParam(":id_curso", $busqueda, PDO::PARAM_INT);
-            } else if (!empty($busqueda) && (!empty(trim($finaliza)))) {
-                $sql = "SELECT * FROM capacitaciones WHERE id=:id_curso ORDER BY id limit :inicia, :fin ";
+            } else if (!empty($busqueda) && (!empty(trim($finaliza))) && (empty(trim($estado)))) {
+                $sql = "SELECT * FROM capacitaciones WHERE nombre LIKE :nombre OR descripcion LIKE :nombre ORDER BY id limit :inicia, :fin ";
                 $consulta = $this->db->prepare($sql);
-                $consulta->bindParam(":id_curso", $busqueda, PDO::PARAM_INT);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
                 $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
                 $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
-            } else if (empty($busqueda) && (empty(trim($finaliza)))) {
+                
+            } else if ((empty($busqueda)) && (!empty(trim($finaliza))) && (!empty(trim($estado)))) {
+                $sql = "SELECT * FROM capacitaciones WHERE estado=:estado ORDER BY id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+                $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+                $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            } else if (!empty($busqueda) && (!empty(trim($finaliza))) && (!empty(trim($estado)))) {
+                $sql = "SELECT * FROM capacitaciones WHERE estado=:estado AND (nombre LIKE :nombre OR descripcion LIKE :nombre) ORDER BY id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+                $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+                $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+                $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
+            } else if (empty($busqueda) && (empty(trim($finaliza))) && (empty(trim($estado)))) {
                 $sql = "SELECT * FROM capacitaciones ";
                 $consulta = $this->db->prepare($sql);
             }
@@ -354,16 +372,21 @@ class ModeloCurso
     }
 
 
-    function listarCursosInscritos($tipo, $buscar, $empieza, $finaliza, $id)
+    function listarCursosInscritos($buscar, $empieza, $finaliza, $id)
     {
         try {
             $estado = 1;
-            if ($tipo == 1) {
-                $sql = "SELECT capacitaciones.* FROM `capacitaciones` INNER JOIN capacitaciones_usuarios ON capacitaciones_usuarios.id_capacitacion = capacitaciones.id WHERE capacitaciones_usuarios.id_usuario =:idUsu AND capacitaciones.estado=:estado ORDER BY capacitaciones.id DESC limit :inicia, :fin";
+            if (empty($buscar)) {
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` 
+                INNER JOIN capacitaciones_usuarios ON capacitaciones_usuarios.id_capacitacion = capacitaciones.id 
+                WHERE capacitaciones_usuarios.id_usuario =:idUsu AND capacitaciones.estado=:estado ORDER BY capacitaciones.id DESC limit :inicia, :fin";
                 $consulta = $this->db->prepare($sql);
             } else {
-                $sql = "SELECT capacitaciones.* FROM `capacitaciones` INNER JOIN capacitaciones_usuarios ON capacitaciones_usuarios.id_capacitacion = capacitaciones.id WHERE capacitaciones_usuarios.id_usuario =:idUsu AND capacitaciones.estado=:estado AND (capacitaciones.nombre LIKE '%:buscar%'  OR capacitaciones.codigo LIKE '%:buscar%') ORDER BY capacitaciones.id DESC limit :inicia, :fin ";
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` 
+                INNER JOIN capacitaciones_usuarios ON capacitaciones_usuarios.id_capacitacion = capacitaciones.id 
+                WHERE capacitaciones_usuarios.id_usuario =:idUsu AND capacitaciones.estado=:estado AND (capacitaciones.nombre LIKE :buscar  OR capacitaciones.descripcion LIKE :buscar) ORDER BY capacitaciones.id DESC limit :inicia, :fin ";
                 $consulta = $this->db->prepare($sql);
+                $buscar = '%' . $buscar . '%';
                 $consulta->bindParam(":buscar", $buscar, PDO::PARAM_STR);
             }
             $consulta->bindParam(":idUsu", $id, PDO::PARAM_INT);
@@ -399,5 +422,54 @@ class ModeloCurso
             // die("Error :" . $e->getMessage());
         }
         return $array;
+    }
+
+    function cantidadCurso($busqueda, $idusuario, $rol, $estado)
+    {
+        try {
+            if ($rol == 'Administrador general') {
+                if (empty(trim($busqueda))) {
+                    $sql = "SELECT COUNT(id) FROM `capacitaciones` WHERE estado=:estado";
+                    $consulta = $this->db->prepare($sql);
+                } else {
+                    $sql = "SELECT COUNT(id) FROM `capacitaciones` WHERE estado=:estado AND (nombre LIKE :nombre OR descripcion LIKE :nombre)";
+                    $consulta = $this->db->prepare($sql);
+                    $busqueda = '%' . $busqueda . '%';
+                    $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
+                }
+            } else {
+                $estado = 1;
+                if (empty(trim($busqueda))) {
+                    $sql = "SELECT COUNT(capacitaciones_usuarios.id) FROM `capacitaciones_usuarios`   
+                    INNER JOIN capacitaciones ON  capacitaciones.id = capacitaciones_usuarios.id_capacitacion
+                    WHERE capacitaciones_usuarios.id=:usuario AND capacitaciones.estado=:estado";
+                    $consulta = $this->db->prepare($sql);
+                } else {
+                    $sql = "SELECT COUNT(capacitaciones_usuarios.id) FROM `capacitaciones_usuarios` 
+                    INNER JOIN capacitaciones ON  capacitaciones.id = capacitaciones_usuarios.id_capacitacion
+                    WHERE capacitaciones_usuarios.id=:usuario AND capacitaciones.estado=:estado AND (nombre LIKE :nombre OR descripcion LIKE :nombre)";
+                    $consulta = $this->db->prepare($sql);
+                    $busqueda = '%' . $busqueda . '%';
+                    $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
+                }
+                $consulta->bindParam(":usuario", $idusuario, PDO::PARAM_INT);
+                
+            }
+            $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            $consulta->execute();
+            if ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                if ($rol == 'Administrador general')
+                    return $fila['COUNT(id)'];
+                else
+                    return $fila['COUNT(capacitaciones_usuarios.id)'];
+            } else {
+                return 0;
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            return  "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
     }
 }

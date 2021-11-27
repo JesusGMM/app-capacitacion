@@ -183,25 +183,18 @@ class ControladorCurso
     return $array;
   }
 
-  function listarCapacitacion($buscar, $empieza, $por_pagina, $var)
+  function listarCapacitacion($rol, $id, $buscar, $estado, $empieza, $por_pagina, $var)
   {
     $cursoMo = new ModeloCurso($var);
-    return  $cursoMo->listar(trim($buscar), $empieza, $por_pagina);
-  }
-
-
-  function listarCapacitacionEstudiante($buscar, $empieza, $por_pagina, $id)
-  {
-    $cursoMo = new ModeloCurso(1);
-    if (empty($buscar))
-      return $cursoMo->listarCursosInscritos(1, $buscar, $empieza, $por_pagina, $id);
+    if ($rol == 'Administrador general')
+      return $cursoMo->listar(trim($buscar), $estado, $empieza, $por_pagina);
     else
-      return $cursoMo->listarCursosInscritos(2, $buscar, $empieza, $por_pagina, $id);
+      return $cursoMo->listarCursosInscritos(trim($buscar), $empieza, $por_pagina, $id);
   }
 
-  function cantidadInscritos($buscar)
+  function cantidadInscritos($buscar,$var)
   {
-    $cursoMo = new ModeloCurso(1);
+    $cursoMo = new ModeloCurso($var);
     return  $cursoMo->listarInscritos($buscar);
   }
 
@@ -227,5 +220,11 @@ class ControladorCurso
     }
 
     return $array;
+  }
+
+  function contarCursos($buscar, $rol, $id, $estado, $var)
+  {
+    $cursoMo = new ModeloCurso($var);
+    return $cursoMo->cantidadCurso(trim($buscar), $id, $rol ,$estado);
   }
 }

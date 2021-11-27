@@ -25,7 +25,7 @@ width: 12rem;
   position: fixed;
   right: 0;
   left: 0;
-  z-index: 10;
+  z-index: 1;
 }
 
 [data-title]:hover:after {
@@ -39,4 +39,45 @@ width: 12rem;
   fill: white;
 }
 
+.tabs{
+  width: 50%;
+  text-align: center;
+  margin-bottom: 5px;
 
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  background-color: #0d6efd;
+  color: white;
+
+}
+.nav-link{
+  cursor: pointer;
+}
+.padin{
+  padding-top: 5rem; 
+  padding-bottom: 1rem;
+}
+.fijo{
+  overflow-y: scroll;
+  width: 100vw;
+  height: 100vh;
+}
+.fijo::-webkit-scrollbar { 
+  /* solo oculta su visualizacion */
+  display: none;
+}
+.form-check-input {
+  height: 3em !important;
+  width: 8em !important;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+input[type=number] { -moz-appearance:textfield; }
+
+.input-group .form-control.is-invalid, .input-group .form-select.is-invalid, .was-validated .input-group .form-control:invalid, .was-validated .input-group .form-select:invalid {
+  z-index: auto;
+}

@@ -195,64 +195,47 @@ class ModeloUsuario
     }
 
 
-    // LISTAR TODOS LOS USUARIOS 
-    function listar($empieza, $finaliza)
+    // LISTAR LOS USUARIOS 
+    function listar($busqueda, $empieza, $finaliza)
     {
         try {
-            $sql = "SELECT * FROM usuarios ORDER BY id DESC limit :inicia, :fin ";
-            $consulta = $this->db->prepare($sql);
+            if (empty($busqueda)) {
+                $sql = "SELECT * FROM usuarios ORDER BY id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+            } else {
+                $sql = "SELECT * FROM usuarios WHERE nombre LIKE :nombre OR apellido LIKE :nombre OR codigo LIKE :nombre ORDER BY id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
+            }
+
             $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
             $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
             $consulta->execute();
-
-            while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                $persona = new Persona();
-                $persona->setId($fila['id']);
-                $persona->setCodigo($fila['codigo']);
-                $persona->setNombre($fila['nombre']);
-                $persona->setApellido($fila['apellido']);
-                $persona->setCapacitaiones($this->obtener_capacitaciones($fila['id']));
-                $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], 2));
-                $personas[] = $persona;
+            if ($consulta->rowCount() > 0) {
+                while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $persona = new Persona();
+                    $persona->setId($fila['id']);
+                    $persona->setCodigo($fila['codigo']);
+                    $persona->setNombre($fila['nombre']);
+                    $persona->setApellido($fila['apellido']);
+                    $persona->setCapacitaiones($this->obtener_capacitaciones($fila['id']));
+                    $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], 2));
+                    $personas[] = $persona;
+                }
+            } else {
+                $personas[] = 2;
+                $personas[] = "No hay usuarios";
             }
             $consulta->closeCursor();
             return $personas;
         } catch (Exception $e) {
-            $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[0] = 3;
+            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte ";
             return $personas;
-            die("Error :" . $e->getMessage());
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
-    }
-
-    // LISTAR USUARIOS CON FILTROS
-    function buscar($busqueda, $empieza, $finaliza)
-    {
-        try {
-            $sql = "SELECT * FROM usuarios WHERE usuario=:usuario and contrasena=:contrasena";
-            $consulta = $this->db->prepare($sql);
-            $consulta->bindParam(":usuario", $empieza, PDO::PARAM_STR);
-            $consulta->bindParam(":contrasena", $empieza, PDO::PARAM_STR);
-            $consulta->execute();
-
-            $fila = $consulta->fetch(PDO::FETCH_ASSOC);
-            $persona = new Persona();
-            $persona->setId($fila['id']);
-            $persona->setNombre($fila['nombre']);
-            $persona->setApellido($fila['apellido']);
-            $persona->setRol($fila['rol']);
-            $persona->setCapacitaiones($this->obtener_capacitaciones($fila['id']));
-            $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], 2));
-            $personas[] = $persona;
-            $consulta->closeCursor();
-            return $personas;
-        } catch (Exception $e) {
-            $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $personas;
-            die("Error :" . $e->getMessage());
-        }
-        return  $personas;
     }
 
     // OBTENER LA CANTIDAD DE CAPACITACIONES
@@ -274,7 +257,7 @@ class ModeloUsuario
             $personas[0] = 2;
             $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
-            die("Error :" . $e->getMessage());
+            //  die("Error :" . $e->getMessage());
         }
     }
 
@@ -712,5 +695,33 @@ class ModeloUsuario
             die("Error :" . $e->getMessage());
         }
         return $personas;
+    }
+
+
+    function cantidadUsuarios($busqueda)
+    {
+        try {
+            if (empty($busqueda)) {
+                $sql = "SELECT COUNT(id) FROM `usuarios`";
+                $consulta = $this->db->prepare($sql);
+            } else {
+                $sql = "SELECT  COUNT(id) FROM usuarios WHERE nombre LIKE :nombre OR apellido LIKE :nombre OR codigo LIKE :nombre";
+                $consulta = $this->db->prepare($sql);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
+            }
+            
+            $consulta->execute();
+            if ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                return $fila['COUNT(id)'];
+            } else {
+                return 0;
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {        
+            return "Ha ocurrido un error si el error persiste comuníquese con soporte "; 
+            //. $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
     }
 }

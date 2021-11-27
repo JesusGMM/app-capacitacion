@@ -49,14 +49,10 @@ class ControladorUsuario
     }
   }
 
-  function listar($buscar, $empieza, $por_pagina)
+  function listar($buscar, $empieza, $por_pagina, $var)
   {
-    $personaMo = new ModeloUsuario(1);
-    if (empty(trim($buscar))) {
-      return $personaMo->listar($empieza, $por_pagina);
-    } else {
-      return $personaMo->buscar(trim($buscar), $empieza, $por_pagina);
-    }
+    $personaMo = new ModeloUsuario($var);
+    return $personaMo->listar(trim($buscar), $empieza, $por_pagina);
   }
 
   function buscarUsuarios($id, $tipo)
@@ -196,6 +192,15 @@ class ControladorUsuario
     $personaMo = new ModeloUsuario(1);
     return $personaMo->listarRespuesta($id, $codigo, $var);
   }
+
+
+  function contarUsuario($buscar,$var)
+  {
+    $personaMo = new ModeloUsuario($var);
+    return $personaMo->cantidadUsuarios($buscar);
+  }
+
+
 }
 
 function validar($arr)
