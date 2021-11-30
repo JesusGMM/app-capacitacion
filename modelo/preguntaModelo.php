@@ -1,14 +1,11 @@
 <?php
 
-
-class ModeloPregunta
-{
+class ModeloPregunta {
 
     private $db;
     private $array;
 
-    function __construct($var)
-    {
+    function __construct($var) {
         if ($var == 1) {
             require_once("../clases/pregunta.php");
         } else if ($var == 2) {
@@ -20,8 +17,7 @@ class ModeloPregunta
     }
 
     //CREAR PREGUNTAS
-    function crearPreguntas($id, $cantidad)
-    {
+    function crearPreguntas($id, $cantidad) {
         try {
             $sql = "INSERT INTO `preguntas`( `id_capacitacion`) VALUES (:id)";
             $pregunta = $this->db->prepare($sql);
@@ -38,7 +34,7 @@ class ModeloPregunta
             $pregunta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
             // echo "<br><br><br><br>";
             // echo $e->getLine();
@@ -48,8 +44,7 @@ class ModeloPregunta
     }
 
     // EDITAR UN PREGUNTAS
-    function actualizar(Pregunta $pregunta)
-    {
+    function actualizar(Pregunta $pregunta) {
         $id = $pregunta->getId();
         $nombre = $pregunta->getPregunta();
         $respuesta1 = $pregunta->getRespuesta1();
@@ -80,17 +75,15 @@ class ModeloPregunta
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
             die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
-
     //ELIMINAR PREGUNTA
-    function eliminar($id)
-    {
+    function eliminar($id) {
         try {
             $sql_eliminar = "DELETE FROM preguntas WHERE id=:id";
             $eliminar = $this->db->prepare($sql_eliminar);
@@ -105,7 +98,7 @@ class ModeloPregunta
             }
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
             die("Error :" . $e->getMessage());
         }
@@ -113,8 +106,7 @@ class ModeloPregunta
     }
 
     //ELIMINAR TODAS LAS PREGUNTAS
-    function eliminarTodas($id)
-    {
+    function eliminarTodas($id) {
         try {
             $sql_eliminar = "DELETE FROM preguntas WHERE id_capacitacion=:id";
             $eliminar = $this->db->prepare($sql_eliminar);
@@ -129,7 +121,7 @@ class ModeloPregunta
             }
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
             die("Error :" . $e->getMessage());
         }
@@ -137,8 +129,7 @@ class ModeloPregunta
     }
 
     // BUSCAR UN CURSO
-    function buscar($id_cap, $empieza, $finaliza)
-    {
+    function buscar($id_cap, $empieza, $finaliza) {
         try {
             if (empty($finaliza)) {
                 $sql = "SELECT * FROM preguntas WHERE id_capacitacion= :id_pregunta ORDER BY id";
@@ -154,35 +145,33 @@ class ModeloPregunta
 
             $consulta->execute();
             if ($consulta->rowCount() > 0) {
-               while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                $pregunta = new Pregunta();
-                $pregunta->setId($fila['id']);
-                $pregunta->setId_capacitacion($fila['id_capacitacion']);
-                $pregunta->setPregunta($fila['pregunta']);
-                $pregunta->setRespuesta1($fila['respuesta_A']);
-                $pregunta->setRespuesta2($fila['respuesta_B']);
-                $pregunta->setRespuesta3($fila['respuesta_C']);
-                $pregunta->setRespuesta4($fila['respuesta_D']);
-                $pregunta->setRespuesta_corecta($fila['respuesta_correcta']);
-                $array[] = $pregunta;
-               }
+                while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $pregunta = new Pregunta();
+                    $pregunta->setId($fila['id']);
+                    $pregunta->setId_capacitacion($fila['id_capacitacion']);
+                    $pregunta->setPregunta($fila['pregunta']);
+                    $pregunta->setRespuesta1($fila['respuesta_A']);
+                    $pregunta->setRespuesta2($fila['respuesta_B']);
+                    $pregunta->setRespuesta3($fila['respuesta_C']);
+                    $pregunta->setRespuesta4($fila['respuesta_D']);
+                    $pregunta->setRespuesta_corecta($fila['respuesta_correcta']);
+                    $array[] = $pregunta;
+                }
             } else {
                 $array[0] = 3;
-                $array[1] =  "Este curso no tiene preguntas"; //. $e->getLine();
+                $array[1] = "Este curso no tiene preguntas"; //. $e->getLine();
             }
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
             die("Error :" . $e->getMessage());
         }
-        return  $array;
+        return $array;
     }
 
-
-    function preguntasCompletas($id, $nombre)
-    {
+    function preguntasCompletas($id, $nombre) {
 
         try {
             $sql = "SELECT * FROM preguntas WHERE id_capacitacion=:id_curso and `respuesta_correcta`=:buscar";
@@ -193,19 +182,19 @@ class ModeloPregunta
 
             if ($consulta->rowCount() > 0) {
                 $array[0] = 3;
-                $array[1] =  "Este curso no tiene todas las preguntas completadas"; //. $e->getLine();
-
+                $array[1] = "Este curso no tiene todas las preguntas completadas"; //. $e->getLine();
             } else {
                 $array[0] = 1;
-                $array[1] =  "Preguntas completadas";
+                $array[1] = "Preguntas completadas";
             }
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
             die("Error :" . $e->getMessage());
         }
-        return  $array;
+        return $array;
     }
+
 }

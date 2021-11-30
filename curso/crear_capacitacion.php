@@ -47,7 +47,7 @@ if ($registro[0] == 1) { ?>
 } ?>
 <div class="container padin">
 <h2 style="text-align: center;">Registrar capacitación</h2>
-    <form class="row g-3" method="POST" action="" enctype="multipart/form-data">
+    <form class="row g-3" method="POST" enctype="multipart/form-data">
         <div class="col-md-6">
             <label for="inputAddress" class="form-label">Titulo de la capacitación</label>
             <input type="text" class="form-control" name="titulo" id="inputAddress" placeholder="Titulo" value="<?php if(isset($_POST['titulo'])) echo $_POST['titulo']; ?>" required/>

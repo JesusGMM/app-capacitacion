@@ -3,3 +3,5 @@
 *.sql
 *.sqlite
 /modelo/conexion.php
+/nbproject/
+.netbeans.xml

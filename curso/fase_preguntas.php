@@ -36,7 +36,7 @@ if ((isset($_GET['realizar-capacitacion'])) && (!empty(trim($_GET['realizar-capa
                         <div class="row g-3">
                             <?php
                             $pregunta_contro = new ControladorPregunta(1);
-                            $preguntas = $pregunta_contro->buscarPregunta($capacitacion->getId(), "", "");
+                            $preguntas = $pregunta_contro->buscarPregunta($capacitacion->getId(), "", "",1);
                             if (is_object($preguntas[0])) {
                                 foreach ($preguntas as $clave => $pregun) {
                                     require 'componentes/preguntas.php';

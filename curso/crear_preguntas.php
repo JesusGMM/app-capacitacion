@@ -23,7 +23,7 @@ if (((isset($_GET['crear-preguntas-capacitacion-id'])) && (!empty(trim($_GET['cr
             }
 
             $empieza = ($pregunta - 1);
-            $preguntas = $pregunta_contro->buscarPregunta($id_capacitacion, $empieza, 1);
+            $preguntas = $pregunta_contro->buscarPregunta($id_capacitacion, $empieza, 1 ,1);
 
             if (isset($_POST['id_pregunta']))
                 $actualizar = $pregunta_contro->actualizarPregunta($_POST, 1);

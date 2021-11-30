@@ -6,12 +6,12 @@ if (isset($_POST['buscar'])) {
     $var = 2;
 } else {
     $var = 1;
-    $buscar = "";
+    $buscar = ""; 
     $pagina = 1; ?>
-    <script>
-        $(document).ready(function() {
+      <script type="text/javascript">
+        window.onload = function() {
             document.getElementById("busqueda").value = "";
-        });
+        };
     </script>
 <?php
 
@@ -27,7 +27,7 @@ $totalusuarios = $user->contarUsuario($buscar, $var);
 if (!is_object($usuarios[0])) {
     echo "<h3 class='text-center'>" . $usuarios[1] . "</h3>";
 } else { ?>
-    <div class="table-responsive">
+    <div class="table-responsive text-center">
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -38,7 +38,7 @@ if (!is_object($usuarios[0])) {
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody >
                 <?php
                 foreach ($usuarios as $usuario) { ?>
 

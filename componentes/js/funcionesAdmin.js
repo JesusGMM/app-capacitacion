@@ -1,3 +1,59 @@
+(function () {
+  var forms = document.querySelectorAll(".needs-validation-empresa");
+  Array.prototype.slice.call(forms).forEach(function (form) {
+    form.addEventListener(
+      "submit",
+      function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add("was-validated");
+      },
+      false
+    );
+  });
+})();
+
+(function () {
+  var forms = document.querySelectorAll(".needs-validation-sede");
+  Array.prototype.slice.call(forms).forEach(function (form) {
+    form.addEventListener(
+      "submit",
+      function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        } else {
+          alert(15);
+        }
+        form.classList.add("was-validated");
+      },
+      false
+    );
+  });
+})();
+
+
+
+(function () {
+  var forms = document.querySelectorAll(".needs-validation-usuario");
+  Array.prototype.slice.call(forms).forEach(function (form) {
+    form.addEventListener(
+      "submit",
+      function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add("was-validated");
+      },
+      false
+    );
+  });
+})();
+
+
 function despublicar(id) {
   Swal.fire({
     title: "¿Está seguro de mover a borrador?",
@@ -139,6 +195,23 @@ function vermodal(accion, id) {
   });
 }
 
+function vermodalempresa(accion, id) {
+  var form_data = new FormData();
+  form_data.append("accion", accion);
+  form_data.append("id_empresa", id);
+  $.ajax({
+    url: "componentes/modal_empresa.php",
+    method: "POST",
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (id_modal) {
+      $("#id_modal").html(id_modal);
+    },
+  });
+}
+
 function buscarUsuario(pag) {
   var name = $("#busqueda").val();
   $.ajax({
@@ -159,49 +232,48 @@ function buscarUsuario(pag) {
 
 function asignar() {
   $.ajax({
-      url: 'acciones-ajax/asignar_capacitaciones.php',
-      type: 'post',
-      data: $('#form-asignar').serialize(),
-      success: function(id_respuesta) {
-          $('#id_respuesta').html(id_respuesta)
-      }
-  });          
+    url: "acciones-ajax/asignar_capacitaciones.php",
+    type: "post",
+    data: $("#form-asignar").serialize(),
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
 }
 
 function eliminarUsuario(idUsuario) {
-  var datos = { id: idUsuario }
+  var datos = { id: idUsuario };
   $.ajax({
-      url: 'acciones-ajax/eliminar_usuario.php',
-      type: 'post',
-      data: datos,
-      success: function(id_respuesta) {
-          $('#id_respuesta').html(id_respuesta)
-      }
-  });          
+    url: "acciones-ajax/eliminar_usuario.php",
+    type: "post",
+    data: datos,
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
 }
 
 function editar() {
   $.ajax({
-      url: 'acciones-ajax/editar_usuario.php',
-      type: 'post',
-      data: $('#form-editar').serialize(),
-      success: function(id_respuesta) {
-          $('#id_respuesta').html(id_respuesta)
-      }
-  });          
+    url: "acciones-ajax/editar_usuario.php",
+    type: "post",
+    data: $("#form-editar").serialize(),
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
 }
-function listadoCurso(activar){
-  if (activar == 1){
-    $('#borrador').removeClass('active'); 
-    $('#publicar').addClass('active');
-    $('#publicas').show();
-    $('#borradores').hide();
-
-  }else{
-    $('#publicar').removeClass('active');
-    $('#borrador').addClass('active');
-    $('#publicas').hide();
-    $('#borradores').show();
+function listadoCurso(activar) {
+  if (activar == 1) {
+    $("#borrador").removeClass("active");
+    $("#publicar").addClass("active");
+    $("#publicas").show();
+    $("#borradores").hide();
+  } else {
+    $("#publicar").removeClass("active");
+    $("#borrador").addClass("active");
+    $("#publicas").hide();
+    $("#borradores").show();
   }
 }
 
@@ -212,16 +284,17 @@ function buscarCursoBorrador(pag) {
     method: "POST",
     data: { buscar: name, pagina: pag },
     beforeSend: function () {
-      $("#lista-cursos").html(
-     //   '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
-      );
+      $("#lista-cursos")
+        .html
+        //   '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+        ();
     },
     success: function (usuarios) {
       $("#lista-cursos").html(usuarios);
-      $('#publicar').removeClass('active');
-      $('#borrador').addClass('active');
-      $('#publicas').hide();
-      $('#borradores').show();
+      $("#publicar").removeClass("active");
+      $("#borrador").addClass("active");
+      $("#publicas").hide();
+      $("#borradores").show();
       if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
     },
   });
@@ -233,10 +306,10 @@ function buscarCursoInformes(pag) {
   $.ajax({
     url: "componentes/curso_informe.php",
     method: "POST",
-    data: { buscar: name, pagina: pag , rol :rol },
+    data: { buscar: name, pagina: pag, rol: rol },
     beforeSend: function () {
       $("#informe-cursos").html(
-       '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
       );
     },
     success: function (usuarios) {

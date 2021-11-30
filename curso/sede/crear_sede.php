@@ -3,7 +3,7 @@ require_once 'componentes/nav.php'; ?>
 
 <div class="container padin">
     <h2 style="text-align: center;">Registrar Sede</h2>
-    <form class="row g-3 needs-validation" novalidate>
+    <form class="row g-3 needs-validation-sede" novalidate>
         <div class="col-md-6">
             <label for="validationCustom01" class="form-label">Nombre</label>
             <div class="input-group has-validation">
@@ -47,7 +47,7 @@ require_once 'componentes/nav.php'; ?>
         <div class="col-md-6">
             <label for="flexSwitchCheckChecked" class="form-label">Estado Activo o inactivo</label>
             <div class="form-check form-switch">
-                <input class="form-check-input" name="estado" type="checkbox" id="flexSwitchCheckChecked" checked />
+                <input class="form-check-input check-estado" name="estado" type="checkbox" id="flexSwitchCheckChecked" checked />
             </div>
         </div>
         <div class="col-md-6" style="margin-top:2%">

@@ -1,28 +1,24 @@
 <?php
 
-
-class ModeloUsuario
-{
+class ModeloUsuario {
 
     private $db;
     private $personas;
 
-    function __construct($var)
-    {
+    function __construct($var) {
         require_once("conexion.php");
-        if ($var == 1) {
+        if ($var == 1)
             require_once("../clases/persona.php");
-        } else {
+        else
             require_once("../../clases/persona.php");
-        }
+
         date_default_timezone_set('America/Bogota');
         $this->db = conectar::conexion();
         $this->personas = array();
     }
 
     // VALIDAR SI EL USUARIO YA EXISTE
-    function validarUsuario($usuario)
-    {
+    function validarUsuario($usuario) {
         try {
             $sql = "SELECT id FROM usuarios WHERE usuario=:usuario";
             $consulta = $this->db->prepare($sql);
@@ -36,7 +32,7 @@ class ModeloUsuario
             }
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
@@ -44,8 +40,7 @@ class ModeloUsuario
     }
 
     // REGISTRAR UN USUARIO
-    function registrar(Persona $usuario)
-    {
+    function registrar(Persona $usuario) {
         $codigo = $usuario->getCodigo();
         $nombre = $usuario->getNombre();
         $apellido = $usuario->getApellido();
@@ -75,17 +70,15 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-
     // EDITAR UN USUARIO
-    function actualizar(Persona $usuario)
-    {
+    function actualizar(Persona $usuario) {
         $id = $usuario->getId();
         $codigo = $usuario->getCodigo();
         $nombre = $usuario->getNombre();
@@ -128,7 +121,7 @@ class ModeloUsuario
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
@@ -136,8 +129,7 @@ class ModeloUsuario
     }
 
     //ELIMINAR USUARIO
-    function eliminar($id)
-    {
+    function eliminar($id) {
         try {
             $sql_eliminar = "DELETE FROM usuarios WHERE id=:id";
             $eliminar = $this->db->prepare($sql_eliminar);
@@ -152,7 +144,7 @@ class ModeloUsuario
             }
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
@@ -160,8 +152,7 @@ class ModeloUsuario
     }
 
     // BUSCAR UN USUARIO
-    function buscarUsuario($id)
-    {
+    function buscarUsuario($id) {
         try {
             $sql = "SELECT * FROM usuarios WHERE id= :id_usuario";
             $consulta = $this->db->prepare($sql);
@@ -180,7 +171,7 @@ class ModeloUsuario
                 $persona->setCapacitaiones($this->obtener_capacitaciones($fila['id']));
                 $persona->setCap_realizadas($this->obtener_capacitaciones_resueltas($fila['id'], 2));
                 $personas[] = $persona;
-                return  $personas;
+                return $personas;
                 $consulta->closeCursor();
             } else {
                 return 0;
@@ -188,16 +179,14 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
     }
 
-
     // LISTAR LOS USUARIOS 
-    function listar($busqueda, $empieza, $finaliza)
-    {
+    function listar($busqueda, $empieza, $finaliza) {
         try {
             if (empty($busqueda)) {
                 $sql = "SELECT * FROM usuarios ORDER BY id DESC limit :inicia, :fin ";
@@ -231,7 +220,7 @@ class ModeloUsuario
             return $personas;
         } catch (Exception $e) {
             $personas[0] = 3;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
             return $personas;
             // echo $e->getLine();
             // die("Error :" . $e->getMessage());
@@ -239,8 +228,7 @@ class ModeloUsuario
     }
 
     // OBTENER LA CANTIDAD DE CAPACITACIONES
-    function obtener_capacitaciones($id)
-    {
+    function obtener_capacitaciones($id) {
         try {
             $sql = "SELECT COUNT(id) FROM `capacitaciones_usuarios` WHERE id_usuario= :id_usuario";
             $consulta = $this->db->prepare($sql);
@@ -255,15 +243,14 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             //  die("Error :" . $e->getMessage());
         }
     }
 
     // OBTENER LAS CAPACITACIONES REALIZADAS
-    function obtener_capacitaciones_resueltas($id, $estado)
-    {
+    function obtener_capacitaciones_resueltas($id, $estado) {
         try {
             $sql = "SELECT COUNT(id) FROM `capacitaciones_usuarios` WHERE id_usuario= :id_usuario AND estado=:estado";
             $consulta = $this->db->prepare($sql);
@@ -279,15 +266,14 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
     }
 
     // OBTENER EL ROL DEL USUARIO
-    function obtenerRol($id)
-    {
+    function obtenerRol($id) {
         try {
             $sql = "SELECT nombre FROM `roles` WHERE id= :id_rol";
             $consulta = $this->db->prepare($sql);
@@ -302,16 +288,14 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
     }
 
-
     // VALIDAR LAS CAPACITACIONES ASIGNADAS
-    function validarCapacitaciones($id, $codigo)
-    {
+    function validarCapacitaciones($id, $codigo) {
         try {
             $sql = "SELECT * FROM `capacitaciones_usuarios` WHERE id_usuario= :usuario AND id_capacitacion= :capacitacion";
             $consulta = $this->db->prepare($sql);
@@ -321,30 +305,29 @@ class ModeloUsuario
 
             if ($consulta->rowCount() > 0) {
                 $array[0] = 1;
-                $array[1] =  "Este curso ya esta asignado";
+                $array[1] = "Este curso ya esta asignado";
                 if ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
-                    $array[2] =  $fila['estado'];
-                    $array[3] =  $fila['fecha_fin'];
-                    $array[4] =  $fila['estado_fase1'];
-                    $array[5] =  $fila['estado_fase3'];
+                    $array[2] = $fila['estado'];
+                    $array[3] = $fila['fecha_fin'];
+                    $array[4] = $fila['estado_fase1'];
+                    $array[5] = $fila['estado_fase3'];
                 }
             } else {
                 $array[0] = 3;
-                $array[1] =  "Este curso no esta asignado"; //. $e->getLine();
+                $array[1] = "Este curso no esta asignado"; //. $e->getLine();
             }
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $array;
             die("Error :" . $e->getMessage());
         }
-        return  $array;
+        return $array;
     }
 
     // ASIGNAR CAPACITACIONES
-    function asignarCapacitaciones($id_usuario, $capacitaciones)
-    {
+    function asignarCapacitaciones($id_usuario, $capacitaciones) {
         try {
             $fecha = date('Y-m-d H:i:s');
             $estado = 0;
@@ -365,7 +348,7 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
@@ -373,8 +356,7 @@ class ModeloUsuario
     }
 
     // QUITAR LAS CAPACITACIONES AL USUARIO
-    function desAsignarCapacitaciones($id_usuario, $capacitaciones)
-    {
+    function desAsignarCapacitaciones($id_usuario, $capacitaciones) {
         try {
             $sql_eliminar = "DELETE FROM `capacitaciones_usuarios` WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
             $eliminar = $this->db->prepare($sql_eliminar);
@@ -391,15 +373,14 @@ class ModeloUsuario
             $eliminar->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-    function iniciarCapacitaciones($id_usuario, $id_capacitacion, $duracion, $estado)
-    {
+    function iniciarCapacitaciones($id_usuario, $id_capacitacion, $duracion, $estado) {
         try {
             $fecha = date('Y-m-d H:i:s');
             $fechaAuxiliar = strtotime("{$duracion} minutes", strtotime($fecha));
@@ -424,15 +405,14 @@ class ModeloUsuario
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-    function reiniciarCapacitaciones($id_usuario, $id_capacitacion)
-    {
+    function reiniciarCapacitaciones($id_usuario, $id_capacitacion) {
         try {
             $array = $this->validarCapacitaciones($id_usuario, $id_capacitacion);
             if ($array[0] == 1) {
@@ -447,9 +427,7 @@ class ModeloUsuario
                 // $fecha_fin = strtotime($array[3]);
                 // $duracion = round(abs($fecha_fin - $fecha) / 60,2);
                 // if ($fecha_fin > $fecha) {
-
                 //     $personas[2] = $duracion;
-
                 // } else {
                 //     $estado = 2;
                 //     $sql_actualizar = "UPDATE capacitaciones_usuarios SET estado=:ini WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap";
@@ -474,15 +452,14 @@ class ModeloUsuario
             }
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-    function guardarRespuesta($idUsuario, $idCap, $idPregunta, $respuesta, $fase)
-    {
+    function guardarRespuesta($idUsuario, $idCap, $idPregunta, $respuesta, $fase) {
         try {
             $sql = "INSERT INTO `respuestas`(`id_usuario`, `id_capacitacion`, `id_pregunta`, `respuesta`, `fase`) VALUES (:usuario, :capacitacion, :pregunta, :respuesta, :fase)";
             $consulta = $this->db->prepare($sql);
@@ -516,15 +493,14 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-    function actualizarRespuesta($idUsuario, $idCap, $idPregunta, $respuesta, $fase)
-    {
+    function actualizarRespuesta($idUsuario, $idCap, $idPregunta, $respuesta, $fase) {
         try {
             $sql = "UPDATE `respuestas` SET `respuesta`=:res WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap AND `id_pregunta`=:idPregunta AND `fase`=:fase";
             $actualizar = $this->db->prepare($sql);
@@ -560,15 +536,14 @@ class ModeloUsuario
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-    function limpiarRespuesta($idUsuario, $idCap, $fase)
-    {
+    function limpiarRespuesta($idUsuario, $idCap, $fase) {
         try {
             $respuesta = "";
             $sql = "UPDATE `respuestas` SET `respuesta`=:res WHERE `id_usuario`=:idUsu AND `id_capacitacion`=:idCap AND `fase`=:fase";
@@ -588,15 +563,14 @@ class ModeloUsuario
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-    function resultadosExamen($id, $codigo, $cantidad)
-    {
+    function resultadosExamen($id, $codigo, $cantidad, $var) {
         try {
             $sql = "SELECT * FROM `respuestas` WHERE `id_usuario`=:usuario AND `id_capacitacion`=:idcapa";
             $consulta = $this->db->prepare($sql);
@@ -604,8 +578,10 @@ class ModeloUsuario
             $consulta->bindParam(":idcapa", $codigo, PDO::PARAM_INT);
             $consulta->execute();
             if ($consulta->rowCount() > 0) {
-                $pregunta_contro = new ControladorPregunta(1);
-                $preguntas = $pregunta_contro->buscarPregunta($codigo, "", "");
+                if ($var == 2)
+                    require_once "../../controlador/pregunta.controlador.php";
+                $pregunta_contro = new ControladorPregunta($var);
+                $preguntas = $pregunta_contro->buscarPregunta($codigo, "", "", $var);
                 $respuesta_corecta_fase1 = 0;
                 $respuesta_incorecta_fase1 = 0;
                 $respuesta_corecta_fase3 = 0;
@@ -663,15 +639,14 @@ class ModeloUsuario
             $consulta->closeCursor();
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-    function listarRespuesta($usuario, $capacitacio, $fase)
-    {
+    function listarRespuesta($usuario, $capacitacio, $fase) {
         try {
             $sql = "SELECT * FROM `respuestas` WHERE `id_usuario`=:usuario AND `id_capacitacion`=:idcapa AND `fase`=:idfase";
             $consulta = $this->db->prepare($sql);
@@ -690,16 +665,14 @@ class ModeloUsuario
             }
         } catch (Exception $e) {
             $personas[0] = 2;
-            $personas[1] =  "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
             return $personas;
             die("Error :" . $e->getMessage());
         }
         return $personas;
     }
 
-
-    function cantidadUsuarios($busqueda)
-    {
+    function cantidadUsuarios($busqueda) {
         try {
             if (empty($busqueda)) {
                 $sql = "SELECT COUNT(id) FROM `usuarios`";
@@ -710,7 +683,7 @@ class ModeloUsuario
                 $busqueda = '%' . $busqueda . '%';
                 $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
             }
-            
+
             $consulta->execute();
             if ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
                 return $fila['COUNT(id)'];
@@ -718,10 +691,11 @@ class ModeloUsuario
                 return 0;
             }
             $consulta->closeCursor();
-        } catch (Exception $e) {        
-            return "Ha ocurrido un error si el error persiste comuníquese con soporte "; 
+        } catch (Exception $e) {
+            return "Ha ocurrido un error si el error persiste comuníquese con soporte ";
             //. $e->getLine();
             // die("Error :" . $e->getMessage());
         }
     }
+
 }

@@ -6,7 +6,7 @@ if ((isset($_GET['ver-resulatados'])) && (!empty(trim($_GET['ver-resulatados']))
     if ($cap_asignada[0] == 1) {
         if ($cap_asignada[2] == 2) {
             $pregunta_contro = new ControladorPregunta(1);
-            $preguntas = $pregunta_contro->buscarPregunta($_GET['ver-resulatados'], "", ""); ?>
+            $preguntas = $pregunta_contro->buscarPregunta($_GET['ver-resulatados'], "", "",1); ?>
             <div class="container padin">
                 <h2 style="text-align: center;">Resultados Fase 1</h2>
                 <div class="row row-cols-1 row-cols-md-3 g-4">

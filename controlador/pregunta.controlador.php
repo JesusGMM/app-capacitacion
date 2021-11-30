@@ -1,11 +1,10 @@
 <?php
 
-class ControladorPregunta
-{
+class ControladorPregunta {
+
     private $array;
 
-    function __construct($var)
-    {
+    function __construct($var) {
         if ($var == 1) {
             require_once("../clases/pregunta.php");
             require_once("../modelo/PreguntaModelo.php");
@@ -17,16 +16,12 @@ class ControladorPregunta
         $this->array = array();
     }
 
-    function crearPregunta($id, $numero)
-    {
+    function crearPregunta($id, $numero) {
         $preguntaModel = new ModeloPregunta(3);
         return $preguntaModel->crearPreguntas($id, $numero);
     }
 
-
-
-    function actualizarPregunta($arr, $var)
-    {
+    function actualizarPregunta($arr, $var) {
         if ($arr != null) {
             if (is_numeric($arr["id_pregunta"])) {
                 $preguntaModel = new ModeloPregunta($var);
@@ -41,54 +36,51 @@ class ControladorPregunta
                 $array = $preguntaModel->actualizar($pregunta);
             } else {
                 $array[] = 2;
-                $array[]  = "Ingrese una pregunta valida";
+                $array[] = "Ingrese una pregunta valida";
             }
         } else {
             $array[] = 0;
-            $array[]  = "Ingrese una pregunta valida";
+            $array[] = "Ingrese una pregunta valida";
         }
         return $array;
     }
 
-    function buscarPregunta($id_capa, $ini, $fin)
-    {
+    function buscarPregunta($id_capa, $ini, $fin, $var) {
         if (is_numeric($id_capa)) {
-            $preguntaModel = new ModeloPregunta(1);
+            $preguntaModel = new ModeloPregunta($var);
             $array = $preguntaModel->buscar($id_capa, $ini, $fin);
         } else {
             $array[] = 2;
-            $array[]  = "Ingrese una pregunta valida";
+            $array[] = "Ingrese una pregunta valida";
         }
         return $array;
     }
 
-
-    function eliminarPregunta($arr, $var)
-    {
+    function eliminarPregunta($arr, $var) {
         if (is_numeric($arr["id_pregunta"])) {
             $preguntaModel = new ModeloPregunta($var);
             $array = $preguntaModel->eliminar($arr["id_pregunta"]);
         } else {
             $array[] = 2;
-            $array[]  = "La pregunta no es valida para eliminar";
+            $array[] = "La pregunta no es valida para eliminar";
         }
         return $array;
     }
 
-    function eliminarTodasPregunta($id)
-    {
+    function eliminarTodasPregunta($id) {
         $preguntaModel = new ModeloPregunta(2);
         return $preguntaModel->eliminarTodas($id);
     }
 
-    function validarRespuestasCompletas($id,$var){
-      if (is_numeric($id)) {
+    function validarRespuestasCompletas($id, $var) {
+        if (is_numeric($id)) {
             $preguntaModel = new ModeloPregunta($var);
-            return $preguntaModel->preguntasCompletas($id,"");
+            return $preguntaModel->preguntasCompletas($id, "");
         } else {
             $array[0] = 2;
-            $array[1]  = "Las preguntas de este curso no son validas";
+            $array[1] = "Las preguntas de este curso no son validas";
         }
         return $array;
     }
+
 }

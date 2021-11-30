@@ -1,22 +1,20 @@
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 (function () {
-  'use strict'
-
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
-
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
+  var forms = document.querySelectorAll(".needs-validation");
+  Array.prototype.slice.call(forms).forEach(function (form) {
+    form.addEventListener(
+      "submit",
+      function (event) {
         if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
+          event.preventDefault();
+          event.stopPropagation();
         }
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
+        form.classList.add("was-validated");
+      },
+      false
+    );
+  });
+})();
 
 function realizar(id) {
   Swal.fire({
@@ -114,12 +112,12 @@ function buscarCursoPublicos(pag) {
   });
 }
 
-function buscarCursoResueltos(pag) {
+function buscarCursoResueltos(pag, id) {
   var name = $("#busqueda-cursos-resueltos").val();
   $.ajax({
     url: "usuario/mis_resultados.php",
     method: "POST",
-    data: { buscar: name, pagina: pag },
+    data: { buscar: name, pagina: pag, idusuario: id },
     beforeSend: function () {
       $("#cursos-resueltos").html(
         '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
@@ -131,4 +129,3 @@ function buscarCursoResueltos(pag) {
     },
   });
 }
-

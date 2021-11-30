@@ -66,7 +66,7 @@ width: 12rem;
   /* solo oculta su visualizacion */
   display: none;
 }
-.form-check-input {
+.check-estado {
   height: 3em !important;
   width: 8em !important;
 }
@@ -79,5 +79,9 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] { -moz-appearance:textfield; }
 
 .input-group .form-control.is-invalid, .input-group .form-select.is-invalid, .was-validated .input-group .form-control:invalid, .was-validated .input-group .form-select:invalid {
+  z-index: auto;
+}
+
+.input-group .form-control.is-valid, .input-group .form-select.is-valid, .was-validated .input-group .form-control:valid, .was-validated .input-group .form-select:valid {
   z-index: auto;
 }
