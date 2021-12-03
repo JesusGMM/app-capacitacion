@@ -15,11 +15,18 @@ if (isset($_POST['accion'])) {
         $titulo = "Editar empresa";
         $botones = "<button type='button' class='btn btn-primary' onclick='editarEmpresa()'>Guardar cambios</button>
                     <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>";
+    } else if ($_POST['accion'] == 'detalles') {
+        $titulo = "Informacion de la capacitación";
+        $botones = "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>";
     }
-
-    require_once "../../controlador/empresacontrolador.php";
-    $empre = new EmpresaControlador(2);
-    $empresas = $empre->buscarEmpresa($_POST['id_empresa'], 2);
+    if ($_POST['accion'] == 'detalles') {
+        require_once "../../controlador/curso.controlador.php";
+        $curso = new ControladorCurso(2);
+    } else {
+        require_once "../../controlador/empresacontrolador.php";
+        $empre = new EmpresaControlador(2);
+        $empresas = $empre->buscarEmpresa($_POST['id_empresa'], 2);
+    }
 
 ?>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -59,6 +66,8 @@ if (isset($_POST['accion'])) {
                         require_once '../empresa/informacion.php';
                     } else if ($_POST['accion'] == 'asignar') {
                         require_once '../empresa/asignacion.php';
+                    } else if ($_POST['accion'] == 'detalles') {
+                        require_once 'detalles_curso.php';
                     } ?>
                 </div>
                 <div class="modal-footer">

@@ -1,52 +1,49 @@
 <?php
-foreach ($usu as $usuario) { ?>
+foreach ($empresas as $empresa) { ?>
     <div class="container">
         <table class="table table-hover">
             <tbody>
+                 <tr>
+                    <td class="col-md-4"><b>Logo:</b></td>
+                    <td class="col-md-8"> <img src="../componentes/logos/empresa/<?php echo $empresa->getLogo(); ?>" alt="Sin logo" width="70px;" height="40px;" /> </td>
+                </tr>
                 <tr>
                     <td class="col-md-4"><b>Nombre:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getNombre(); ?></td>
+                    <td class="col-md-8"> <?php echo $empresa->getNombre(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Apallido:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getApellido(); ?></td>
+                    <td class="col-md-4"><b>Nit:</b></td>
+                    <td class="col-md-8"> <?php echo $empresa->getNit(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Codigo:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getCodigo(); ?></td>
+                    <td class="col-md-4"><b>Ciudad:</b></td>
+                    <td class="col-md-8"> <?php echo $empresa->getCiudad(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Nombre de usuario:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getUsuario(); ?></td>
+                    <td class="col-md-4"><b>Dirreción de la empresa:</b></td>
+                    <td class="col-md-8"> <?php echo $empresa->getDirrecion(); ?></td>
                 </tr>
                 <tr>
                     <td class="col-md-4"><b>Correo electronicao:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getEmail(); ?></td>
+                    <td class="col-md-8"> <?php echo $empresa->getCorreo(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Rol:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getrol(); ?></td>
+                    <td class="col-md-4"><b>Telefono:</b></td>
+                    <td class="col-md-8"> <?php echo $empresa->getTelefono(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Capacitaciones inscritastas:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getCapacitaiones(); ?></td>
+                    <td class="col-md-4"><b>Capacitaciones inscritas:</b></td>
+                    <td class="col-md-8"> <?php echo $empresa->getCapacitaciones(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Capacitaciones resueltas:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getCap_realizadas(); ?></td>
+                    <td class="col-md-4"><b>Sedes activas:</b></td>
+                    <td class="col-md-8"> <?php echo $empresa->getSedes(); ?></td>
                 </tr>
                 <tr>
-                    <td class="col-md-4"><b>Nivel de completado:</b></td>
-                    <td class="col-md-8">
-                        <?php
-                        if ($usuario->getCapacitaiones() == 0)
-                            echo 0;
-                        else
-                            echo ($usuario->getCap_realizadas() / ($usuario->getCapacitaiones()) * 100);
+                    <td class="col-md-4"><b>Usuarios activos:</b></td>
+                    <td class="col-md-8"> <?php echo $empresa->getUsuario(); ?></td>
+                </tr>
 
-                        ?>%
-                    </td>
-                </tr>
             </tbody>
         </table>
 

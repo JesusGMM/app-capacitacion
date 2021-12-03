@@ -29,7 +29,7 @@ foreach ($usu as $usuario) { ?>
                 </tr>
                 <tr>
                     <td class="col-md-4"><b>Capacitaciones inscritastas:</b></td>
-                    <td class="col-md-8"> <?php echo $usuario->getCapacitaiones(); ?></td>
+                    <td class="col-md-8"> <?php echo $usuario->getCapacitaciones(); ?></td>
                 </tr>
                 <tr>
                     <td class="col-md-4"><b>Capacitaciones resueltas:</b></td>
@@ -39,10 +39,10 @@ foreach ($usu as $usuario) { ?>
                     <td class="col-md-4"><b>Nivel de completado:</b></td>
                     <td class="col-md-8">
                         <?php
-                        if ($usuario->getCapacitaiones() == 0)
+                        if ($usuario->getCapacitaciones() == 0)
                             echo 0;
                         else
-                            echo ($usuario->getCap_realizadas() / ($usuario->getCapacitaiones()) * 100);
+                            echo ($usuario->getCap_realizadas() / ($usuario->getCapacitaciones()) * 100);
 
                         ?>%
                     </td>

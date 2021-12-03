@@ -86,25 +86,8 @@ if (is_array($usu)) {
                                 if ($cap_asignada[2] != 0) {
                                     echo '<a href="../curso/?ver-resulatados=' . $cap->getId() . '&idUsu=' . $_GET['id'] . '" class="btn btn-success" style="margin-top:2%">Revisar</a>';
                                 } else if ($usuario[0]->getRol() == 'Administrador general') {
-                                    echo "<button type='button' class='btn btn-danger'  onclick='quitar(" . '"' . $cap->getId() . '"' . ")'>Quitar capacitación</button>"; ?>
-                                    <script type="text/javascript">
-                                        function quitar(id) {
-                                            Swal.fire({
-                                                title: '¿Está seguro de quitar la capacitación?',
-                                                text: "<?php echo $cap->getNombre(); ?>",
-                                                icon: 'question',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#d33',
-                                                cancelButtonColor: '#3085d6',
-                                                cancelButtonText: 'Cancelar',
-                                                confirmButtonText: 'Eliminar'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    eliminarCapAsignada(id, '<?php echo $usuarios->getId(); ?>');
-                                                }
-                                            })
-                                        }
-                                    </script>
+                                    echo "<button type='button' class='btn btn-danger'  onclick='quitarCapacitacionUsuario(" .  $cap->getId() . ',' .  $usuarios->getId() . ")'>Quitar capacitación</button>"; ?>
+                    
                                     <div id="id_respuesta">
                                     </div>
                                 <?php } else echo "<b>Capacitación sin resolver</b>"; ?>

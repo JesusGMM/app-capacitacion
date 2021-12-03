@@ -8,7 +8,7 @@ require_once 'componentes/nav.php';
         <span class="input-group-text" id="buscar">Buscar</span>
         <input id="busqueda-sede" type="text" class="form-control" aria-describedby="buscar" onkeyup="buscarSede(1)" />
     </div>
-    <div id="lista-empresa">
+    <div id="lista-sede">
         <?php
         require_once 'sede/listar_sede.php';
         ?>

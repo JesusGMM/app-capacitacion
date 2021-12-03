@@ -46,7 +46,7 @@ if (!is_object($usuarios[0])) {
                         <th scope="row"><?php echo $usuario->getCodigo(); ?></th>
                         <td><?php echo $usuario->getNombre(); ?></td>
                         <td><?php echo $usuario->getApellido(); ?></td>
-                        <td>Inscritas <?php echo $usuario->getCapacitaiones(); ?> realizadas <?php echo $usuario->getCap_realizadas(); ?></td>
+                        <td>Inscritas <?php echo $usuario->getCapacitaciones(); ?> realizadas <?php echo $usuario->getCap_realizadas(); ?></td>
                         <td>
                             <form method="get" action="../curso/">
 

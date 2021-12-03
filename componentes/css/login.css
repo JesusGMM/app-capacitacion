@@ -70,7 +70,10 @@ width: 12rem;
   height: 3em !important;
   width: 8em !important;
 }
-
+.check-usuario {
+  height: 2em !important;
+  width: 5em !important;
+}
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;

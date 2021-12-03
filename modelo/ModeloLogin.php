@@ -34,8 +34,8 @@ class ModeloLogin
             $consulta->closeCursor();
             return $personas;
         } catch (Exception $e) {
-            die("Error :" . $e->getMessage());
-            return "Linea del error :" . $e->getLine();
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
     }
 }

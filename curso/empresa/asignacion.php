@@ -5,8 +5,8 @@ foreach ($empresas as $empresa) {
     $capacitacion = $curso->listarCapacitacion('Administrador general', $empresa->getId(),"", "", "", "", 2);
 ?>
     <div class="container">
-        <form id="form-asignar">
-            <input type="hidden" name="id_usuario" value="<?php echo $empresa->getId(); ?>"/>
+        <form id="form-asignar-empresa">
+            <input type="hidden" name="id_empresa" value="<?php echo $empresa->getId(); ?>"/>
             <table class="table table-hover" style="text-align: center;">
                 <thead>
                     <tr>

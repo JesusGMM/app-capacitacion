@@ -6,7 +6,7 @@ if (isset($_POST['accion'])) {
                     <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>";
     } else if ($_POST['accion'] == 'Eliminar') {
         $titulo = "Eliminar usuario";
-        $botones = "<button type='button' class='btn btn-danger' onclick='eliminarUsuario(".$_POST['id_usuario'].")'>Eliminar</button>
+        $botones = "<button type='button' class='btn btn-danger' onclick='eliminarUsuario(" . $_POST['id_usuario'] . ")'>Eliminar</button>
                     <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>";
     } else if ($_POST['accion'] == 'informacion') {
         $titulo = "Informacion del usuario";
@@ -23,11 +23,10 @@ if (isset($_POST['accion'])) {
     if ($_POST['accion'] == 'detalles') {
         require_once "../../controlador/curso.controlador.php";
         $curso = new ControladorCurso(2);
-    }
-    else {
-    require_once "../../controlador/usuario.controlador.php";
-    $user = new ControladorUsuario(2);
-    $usu = $user->buscarUsuarios($_POST['id_usuario'], 2);
+    } else {
+        require_once "../../controlador/usuario.controlador.php";
+        $user = new ControladorUsuario(2);
+        $usu = $user->buscarUsuarios($_POST['id_usuario'], 2);
     }
 ?>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -73,7 +72,7 @@ if (isset($_POST['accion'])) {
                         require_once '../usuario/asignacion.php';
                     } else if ($_POST['accion'] == 'detalles') {
                         require_once 'detalles_curso.php';
-                     } ?>
+                    } ?>
                 </div>
                 <div class="modal-footer">
                     <?php echo $botones; ?>

@@ -1,6 +1,9 @@
 <?php
 require_once 'componentes/nav.php';
+require_once "../controlador/empresacontrolador.php";
 $user = new ControladorUsuario(1);
+$empre = new EmpresaControlador(1);
+$empresas = $empre->listarEmpresaTodas(1,1);
 $registro = $user->crear($_POST);
 if ($registro[0] == 1) { ?>
     <script type="text/javascript">
@@ -51,6 +54,25 @@ if ($registro[0] == 1) { ?>
     <h3 style="text-align:center; margin-bottom: 2%;">Registrar Usuario</h3>
     <form method="post" class="row g-3 needs-validation-usuario" id="form-crear-usuario" novalidate>
         <div class="col-md-6">
+            <label for="empresa" class="form-label" style="margin-bottom: 2.5%;">Empresa</label>
+            <select class="form-select" name="idempresa" id="empresa" onchange="listarSedesEmpresa($(this).val(),1)" required>
+                <option></option>
+                <?php
+                foreach ($empresas as $empresa) {
+                    echo '<option value="' . $empresa->getId() . '">' . $empresa->getNombre() . '</option>';
+                } ?>
+            </select>
+            <div class="invalid-feedback">
+                Debe seleccionar una empresa
+            </div>
+        </div>
+        <div class="col-md-6" id="cargar-sedes">
+            <label for="sede" class="form-label" style="margin-bottom: 2.5%;">Sede</label>
+            <select class="form-select" name="idsede" id="sede">
+                <option value="0">Sin sede</option>
+            </select>
+        </div>
+        <div class="col-md-6">
             <label for="nombre" class="form-label">Nombre</label>
             <input name="nombre" type="text" class="form-control" id="nombre" placeholder="Nombres" value="<?php if (isset($_POST['nombre'])) echo $_POST['nombre']; ?>" required>
             <div class="invalid-feedback">
@@ -99,7 +121,12 @@ if ($registro[0] == 1) { ?>
                 La identificación es requerida
             </div>
         </div>
-
+        <div class="col-md-6">
+            <label for="flexSwitchCheckChecked" class="form-label">Estado Activo o inactivo</label>
+            <div class="form-check form-switch">
+                <input class="form-check-input check-usuario" name="estado" type="checkbox" id="flexSwitchCheckChecked" checked />
+            </div>
+        </div>
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Registrar</button>
         </div>

@@ -35,7 +35,7 @@ foreach ($capacitacion as $cap) {
 
             </div>
             <div class="card-footer" style="text-align: center;">
-                <button class="btn btn-success" style="margin-top:2%" onclick="vermodal('detalles',<?php echo $cap->getId(); ?>)" >Detalles</button>
+                <button class="btn btn-success" style="margin-top:2%" onclick="vermodalempresa('detalles',<?php echo $cap->getId(); ?>)">Detalles</button>
             </div>
         </div>
     </div>
@@ -60,8 +60,7 @@ if ($totalcursos != 0) {
                         else
                             echo '<li class="page-item" style="cursor:pointer;"><a class="page-link" id="pagina' . $i . '" onclick="buscarCursoInformes(' . $i . ')">' . $i . '</a></li>';
                     }
-                    if ($total_paginas > 5)
-                        echo '</div>'; ?>
+                    if ($total_paginas > 5) echo '</div>'; ?>
                     <li class="page-item <?php if ($total_paginas == $pagina) echo "disabled"; ?>">
                         <a class="page-link" type="button" onclick="buscarCursoInformes(<?php echo $pagina + 1; ?>)">&raquo;</a>
                     </li>

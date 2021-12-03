@@ -34,11 +34,9 @@ class ModeloPregunta {
             $pregunta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            // echo "<br><br><br><br>";
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";           
             // echo $e->getLine();
-            die("Error :" . $e->getMessage());
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
@@ -98,9 +96,9 @@ class ModeloPregunta {
             }
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
@@ -121,9 +119,9 @@ class ModeloPregunta {
             }
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; 
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
@@ -164,9 +162,9 @@ class ModeloPregunta {
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; 
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
@@ -182,7 +180,7 @@ class ModeloPregunta {
 
             if ($consulta->rowCount() > 0) {
                 $array[0] = 3;
-                $array[1] = "Este curso no tiene todas las preguntas completadas"; //. $e->getLine();
+                $array[1] = "Este curso no tiene todas las preguntas completadas"; 
             } else {
                 $array[0] = 1;
                 $array[1] = "Preguntas completadas";
@@ -190,9 +188,9 @@ class ModeloPregunta {
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }

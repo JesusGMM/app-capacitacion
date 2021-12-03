@@ -79,7 +79,7 @@ class ControladorCurso {
                     $curso->setUrl($arr["url"]);
                     $curso->setEstado($arr["estado"]);
                     $curso->setCodigo($arr["codigo"]);
-                    if (!empty(trim($_FILES["imagen"]["name"]))) {
+                    if (isset($_FILES["imagen"]) &&  !empty(trim($_FILES["imagen"]["name"]))) {
                         $test = explode('.', $_FILES["imagen"]["name"]);
                         $name = $test[0] . $arr["codigo"] . '.PNG';
                     } else if ($array[0] == 3) {
@@ -91,7 +91,7 @@ class ControladorCurso {
                     $array = $cursoMo->actualizar($curso);
 
                     if ($array[0] == 1) {
-                        if (!empty(trim($_FILES["imagen"]["name"]))) {
+                        if (isset($_FILES["imagen"]) &&  !empty(trim($_FILES["imagen"]["name"]))) {
                             $location = '../componentes/imagenes/' . $curso->getImagen();
                             move_uploaded_file($_FILES["imagen"]["tmp_name"], $location);
                         } else {
@@ -214,6 +214,26 @@ class ControladorCurso {
     function contarCursos($buscar, $rol, $id, $estado, $var) {
         $cursoMo = new ModeloCurso($var);
         return $cursoMo->cantidadCurso(trim($buscar), $id, $rol, $estado);
+    }
+
+    function listarCapacitacionEmpresa($idempresa, $buscar, $empieza, $fin, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->empresaBuscarCurso($idempresa, trim($buscar), $empieza, $fin);
+    }
+
+    function listarCapacitacionSede($idsede, $buscar, $empieza, $fin, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->sedeBuscarCurso($idsede, trim($buscar), $empieza, $fin);
+    }
+
+    function contarCursosEmpresa($buscar, $id, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->cantidadCursoEmpresa(trim($buscar), $id);
+    }
+
+    function contarCursosSede($buscar, $id, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->cantidadCursoSede(trim($buscar), $id);
     }
 
 }

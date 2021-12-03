@@ -11,15 +11,51 @@ class Persona {
     private $rol;
     private $capacitaciones;
     private $cap_realizadas;
+    private $idsede;
+    private $idempresa;
+    private $estado;
 
     public function __construct() {
         
     }
 
-    public function setId($id) {
-        $this->id = $id;
+    public function getId() {
+        return $this->id;
     }
-    public function getCapacitaiones() {
+
+    public function getNombre() {
+        return $this->nombre;
+    }
+
+    public function getApellido() {
+        return $this->apellido;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function getUsuario() {
+        return $this->usuario;
+    }
+
+    public function getPassword() {
+        return hash('whirlpool', $this->password);
+    }
+
+    public function getCodigo() {
+        return $this->codigo;
+    }
+
+    public function getRol() {
+        return $this->rol;
+    }
+
+    public function getEstado() {
+        return $this->estado;
+    }
+
+    public function getCapacitaciones() {
         return $this->capacitaciones;
     }
 
@@ -27,72 +63,64 @@ class Persona {
         return $this->cap_realizadas;
     }
 
-    public function setCapacitaiones($capacitaciones) {
-        $this->capacitaciones = $capacitaciones;
+    public function getIdsede() {
+        return $this->idsede;
     }
 
-    public function setCap_realizadas($cap_realizadas) {
-        $this->cap_realizadas = $cap_realizadas;
+    public function getIdempresa() {
+        return $this->idempresa;
     }
 
-        public function setNombre($nombre) {
+    public function setId($id): void {
+        $this->id = $id;
+    }
+
+    public function setNombre($nombre): void {
         $this->nombre = $nombre;
     }
 
-    public function setApellido($apellido) {
+    public function setApellido($apellido): void {
         $this->apellido = $apellido;
     }
 
-    public function setEmail($email) {
+    public function setEmail($email): void {
         $this->email = $email;
     }
 
-    public function setRol($rol) {
-        $this->rol = $rol;
-    }
-
-    public function setPassword($password) {
-        $this->password = $password;
-    }
-
-    public function setUsuario($usuario) {
+    public function setUsuario($usuario): void {
         $this->usuario = $usuario;
     }
 
-    public function setCodigo($codigo) {
+    public function setPassword($password): void {
+        $this->password = $password;
+    }
+
+    public function setCodigo($codigo): void {
         $this->codigo = $codigo;
     }
 
-    public function getNombre() {
-        return ucwords(trim($this->nombre));
+    public function setRol($rol): void {
+        $this->rol = $rol;
     }
 
-    public function getApellido() {
-        return ucwords(trim($this->apellido));
+    public function setCapacitaciones($capacitaciones): void {
+        $this->capacitaciones = $capacitaciones;
     }
 
-    public function getEmail() {
-        return trim($this->email);
+    public function setCap_realizadas($cap_realizadas): void {
+        $this->cap_realizadas = $cap_realizadas;
     }
 
-    public function getPasword() {
-        return $this->password;
+    public function setIdsede($idsede): void {
+        $this->idsede = $idsede;
     }
 
-    public function getRol() {
-        return $this->rol;
+    public function setIdempresa($idempresa): void {
+        $this->idempresa = $idempresa;
     }
 
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getUsuario() {
-        return trim($this->usuario);
-    }
-
-    public function getCodigo() {
-        return trim($this->codigo);
+    public function setEstado($estado): void {
+        $this->estado = $estado;
     }
 
 }

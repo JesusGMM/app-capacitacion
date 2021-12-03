@@ -34,6 +34,10 @@ if (isset($_SESSION["iniciarSesionAppCap"]) && $_SESSION["iniciarSesionAppCap"] 
       require_once("empresa/empresa.php");
     } else if (isset($_GET["lista-sede"])) {
       require_once("sede/sede.php");
+    } else if (isset($_GET["empresa-id-cursos"])) {
+      require_once("capacitaciones_empresa.php");
+    } else if (isset($_GET["sede-id-cursos"])) {
+      require_once("capacitaciones_sedes.php");
     } else {
       $rutas = true;
     }

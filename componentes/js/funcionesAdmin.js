@@ -1,3 +1,14 @@
+
+$(document).ready(function() {
+  $('#empresa').select2({
+    theme: "classic",
+    placeholder: "Seleccionar empresa",
+  });
+  $('#sede').select2({
+    theme: "classic"
+  });
+});
+
 (function () {
   var forms = document.querySelectorAll(".needs-validation-empresa");
   Array.prototype.slice.call(forms).forEach(function (form) {
@@ -24,17 +35,13 @@
         if (!form.checkValidity()) {
           event.preventDefault();
           event.stopPropagation();
-        } else {
-          alert(15);
-        }
+        } 
         form.classList.add("was-validated");
       },
       false
     );
   });
 })();
-
-
 
 (function () {
   var forms = document.querySelectorAll(".needs-validation-usuario");
@@ -52,7 +59,6 @@
     );
   });
 })();
-
 
 function despublicar(id) {
   Swal.fire({
@@ -212,6 +218,23 @@ function vermodalempresa(accion, id) {
   });
 }
 
+function vermodalsede(accion, id) {
+  var form_data = new FormData();
+  form_data.append("accion", accion);
+  form_data.append("id_sede", id);
+  $.ajax({
+    url: "componentes/modal_sede.php",
+    method: "POST",
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (id_modal) {
+      $("#id_modal").html(id_modal);
+    },
+  });
+}
+
 function buscarUsuario(pag) {
   var name = $("#busqueda").val();
   $.ajax({
@@ -226,6 +249,17 @@ function buscarUsuario(pag) {
     success: function (usuarios) {
       $("#lista-usuarios").html(usuarios);
       if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
+    },
+  });
+}
+
+function listarSedesEmpresa(id,accion){
+  $.ajax({
+    url: "componentes/listar_sedes.php",
+    method: "POST",
+    data: { idempresa: id, acion:accion },
+    success: function (usuarios) {
+      $("#cargar-sedes").html(usuarios);
     },
   });
 }
@@ -315,6 +349,278 @@ function buscarCursoInformes(pag) {
     success: function (usuarios) {
       $("#informe-cursos").html(usuarios);
       if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
+    },
+  });
+}
+
+function buscarCursoEmpresa(pag, id) {
+  var name = $("#busqueda-cursos-empresa").val();
+  $.ajax({
+    url: "empresa/mis_cursos.php",
+    method: "POST",
+    data: { buscar: name, pagina: pag, idempresa: id },
+    beforeSend: function () {
+      $("#cursos-asigandos-empresa").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (usuarios) {
+      $("#cursos-asigandos-empresa").html(usuarios);
+      if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
+    },
+  });
+}
+
+function quitarCapacitacionUsuario(id, idusuario) {
+  Swal.fire({
+    title: "¿Está seguro de quitar la capacitación?",
+    text: "",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    cancelButtonText: "Cancelar",
+    confirmButtonText: "Eliminar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      eliminarCapAsignada(id, idusuario);
+    }
+  });
+}
+
+function quitarCursoEmpresa(id, idempresa) {
+  Swal.fire({
+    title: "¿Está seguro de quitar la capacitación?",
+    text: "Tenga en cuenta que se le quitará a todas las sedes y usuarios pertenecientes a esta empresa",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    cancelButtonText: "Cancelar",
+    confirmButtonText: "Eliminar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      eliminarCapAsignadaEmpresa(id, idempresa);
+    }
+  });
+}
+
+function eliminarCapAsignadaEmpresa(idCap, idempresa) {
+  $.ajax({
+    url: "acciones-ajax/asignar_capacitaciones_empresa.php",
+    type: "post",
+    data: { codigo: idCap, empresa: idempresa, accion: "quitar_capacitacion" },
+    success: function (id_respuesta) {
+      $("#id_modal").html(id_respuesta);
+    },
+  });
+}
+
+function asignarEmpresa() {
+  $.ajax({
+    url: "acciones-ajax/asignar_capacitaciones_empresa.php",
+    type: "post",
+    data: $("#form-asignar-empresa").serialize(),
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
+}
+
+function informacion() {
+  Swal.fire({
+    position: "top-center",
+    icon: "info",
+    title:
+      "Tenga en cuenta que el estado también cambiara para todas las sedes y usuarios pertenecientes a esta empresa",
+    confirmButtonColor: "#3fc3ee",
+    showConfirmButton: true,
+  });
+}
+
+function editarEmpresa() {
+  var form = $("#form-editar-empresa")[0];
+  var dato_archivo = $("#file").prop("files")[0];
+  var form_data = new FormData(form);
+  form_data.append("imagen", dato_archivo);
+  $.ajax({
+    url: "acciones-ajax/editar_empresa.php",
+    type: "post",
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    beforeSend: function () {
+      $("#id_respuesta").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
+}
+
+function eliminarEmpresa(id) {
+  Swal.fire({
+    title: "¿Está seguro de eliminar la empresa?",
+    text: "Tenga en cuenta que se le eliminaran todas las sedes y usuarios pertenecientes a esta empresa",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#6c757d",
+    cancelButtonText: "Cancelar",
+    confirmButtonText: "Eliminar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      eliminarEmpresaComfirmado(id, "eliminar");
+    }
+  });
+}
+
+function eliminarEmpresaComfirmado(id) {
+  $.ajax({
+    url: "acciones-ajax/eliminar_empresa.php",
+    method: "POST",
+    data: { idempresa: id },
+    beforeSend: function () {
+      $("#id_respuesta").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
+}
+
+function buscarEmpresa(pag) {
+  var name = $("#busqueda-empresa").val();
+  $.ajax({
+    url: "empresa/listar_empresa.php",
+    method: "POST",
+    data: { buscar: name, pagina: pag },
+    beforeSend: function () {
+      $("#lista-empresa").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (usuarios) {
+      $("#lista-empresa").html(usuarios);
+      if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
+    },
+  });
+}
+
+function buscarSede(pag) {
+  var name = $("#busqueda-sede").val();
+  $.ajax({
+    url: "sede/listar_sede.php",
+    method: "POST",
+    data: { buscar: name, pagina: pag },
+    beforeSend: function () {
+      $("#lista-sede").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (usuarios) {
+      $("#lista-sede").html(usuarios);
+      if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
+    },
+  });
+}
+
+function quitarCursoSede(id, idsede) {
+  Swal.fire({
+    title: "¿Está seguro de quitar la capacitación?",
+    text: "Tenga en cuenta que se le quitará a todos los usuarios pertenecientes a esta sede",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    cancelButtonText: "Cancelar",
+    confirmButtonText: "Eliminar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      eliminarCapAsignadaSede(id, idsede);
+    }
+  });
+}
+
+function eliminarCapAsignadaSede(idCap, idsede) {
+  $.ajax({
+    url: "acciones-ajax/asignar_capacitaciones_sede.php",
+    type: "post",
+    data: { codigo: idCap, sede: idsede, accion: "quitar_capacitacion" },
+    success: function (id_respuesta) {
+      $("#id_modal").html(id_respuesta);
+    },
+  });
+}
+
+function asignarSede() {
+  $.ajax({
+    url: "acciones-ajax/asignar_capacitaciones_sede.php",
+    type: "post",
+    data: $("#form-asignar-sede").serialize(),
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
+}
+
+function editarSede() {
+  var form = $("#form-editar-sede")[0];
+  var dato_archivo = $("#file").prop("files")[0];
+  var form_data = new FormData(form);
+  form_data.append("imagen", dato_archivo);
+  $.ajax({
+    url: "acciones-ajax/editar_sede.php",
+    type: "post",
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    beforeSend: function () {
+      $("#id_respuesta").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
+    },
+  });
+}
+
+function eliminarSede(id) {
+  Swal.fire({
+    title: "¿Está seguro de eliminar la sede?",
+    text: "Tenga en cuenta que se le eliminaran todos los usuarios pertenecientes a esta sede",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#6c757d",
+    cancelButtonText: "Cancelar",
+    confirmButtonText: "Eliminar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      eliminarSedeComfirmado(id, "eliminar");
+    }
+  });
+}
+
+function eliminarSedeComfirmado(id) {
+  $.ajax({
+    url: "acciones-ajax/eliminar_sede.php",
+    method: "POST",
+    data: { idsede: id },
+    beforeSend: function () {
+      $("#id_respuesta").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (id_respuesta) {
+      $("#id_respuesta").html(id_respuesta);
     },
   });
 }

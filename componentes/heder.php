@@ -11,6 +11,7 @@
   <link href="../componentes/css/bootstrap.min.css" rel="stylesheet">
   <!-- Estilo de personalizados -->
   <link href="../componentes/css/login.css" rel="stylesheet">
+  <link href="../componentes/select/css/select2.min.css" rel="stylesheet">
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 

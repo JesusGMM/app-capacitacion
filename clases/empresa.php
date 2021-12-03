@@ -10,7 +10,11 @@ class  Empresa{
     private $telefono;
     private $estado;
     private $logo;
-    
+    private $capacitaciones;
+    private $sedes;
+    private $usuario;
+
+
     public function __construct() {
         
     }
@@ -87,6 +91,28 @@ class  Empresa{
     public function setLogo($logo): void {
         $this->logo = $logo;
     }
+    public function getCapacitaciones() {
+        return $this->capacitaciones;
+    }
 
+    public function getSedes() {
+        return $this->sedes;
+    }
+
+    public function getUsuario() {
+        return $this->usuario;
+    }
+
+    public function setCapacitaciones($capacitaciones): void {
+        $this->capacitaciones = $capacitaciones;
+    }
+
+    public function setSedes($sedes): void {
+        $this->sedes = $sedes;
+    }
+
+    public function setUsuario($usuario): void {
+        $this->usuario = $usuario;
+    }
 
 }

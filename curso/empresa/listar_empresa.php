@@ -52,7 +52,7 @@ if (!is_object($empresas[0])) {
                         <td>
                             <form method="get" action="../curso/">
 
-                                <input type="Hidden" name="id" value="<?php echo $empresa->getid(); ?>" />
+                                <input type="Hidden" name="empresa-id-cursos" value="<?php echo $empresa->getid(); ?>" />
 
                                 <button type="submit" class="btn btn-success btn-sm">
                                     <img src="../componentes/img/iconos/Iconos-ver.svg" />

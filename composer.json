@@ -9,5 +9,6 @@
             "email": "admin@ocresort.co"
         }
     ],
-    "require": {}
+    "require": {
+    }
 }

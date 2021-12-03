@@ -70,7 +70,7 @@ if (isset($_GET['ingreso']) && $_GET['ingreso'] == false) { ?>
         Swal.fire({
             position: 'top-center',
             icon: 'error',
-            title: 'Nombre de usuario o contraseña incorrecta',
+            title: 'Credenciales incorrectas o usuario desactivado',
             confirmButtonColor: "#0d6efd",
             showConfirmButton: true,
         })

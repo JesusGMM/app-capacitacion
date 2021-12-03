@@ -1,11 +1,13 @@
 <?php
 
-class ModeloCurso {
+class ModeloCurso
+{
 
     private $db;
     private $array;
 
-    function __construct($var) {
+    function __construct($var)
+    {
         if ($var == 1) {
             require_once("../clases/curso.php");
         } else {
@@ -18,7 +20,8 @@ class ModeloCurso {
     }
 
     // VALIDAR SI EL CURSO YA EXISTE
-    function validarCurso($id) {
+    function validarCurso($id)
+    {
         try {
             $sql = "SELECT * FROM capacitaciones WHERE codigo=:id";
             $consulta = $this->db->prepare($sql);
@@ -37,15 +40,16 @@ class ModeloCurso {
             }
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error, si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error, si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
     // REGISTRAR UN CURSO
-    function crear(Curso $curso) {
+    function crear(Curso $curso)
+    {
         $codigo = $curso->getCodigo();
         $nombre = $curso->getNombre();
         $descripcion = $curso->getDescripcion();
@@ -83,17 +87,16 @@ class ModeloCurso {
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            // echo "<br><br><br><br>";
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
             // echo $e->getLine();
-            die("Error :" . $e->getMessage());
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
     // ACTUALIZAR UN CURSO
-    function actualizar(Curso $curso) {
+    function actualizar(Curso $curso)
+    {
         $id = $curso->getId();
         $codigo = $curso->getCodigo();
         $nombre = $curso->getNombre();
@@ -128,17 +131,16 @@ class ModeloCurso {
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-
-            echo $e->getLine();
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
     // ACTUALIZAR EL ESTADO
-    function actualizarEstado(Curso $curso) {
+    function actualizarEstado(Curso $curso)
+    {
         $codigo = $curso->getCodigo();
         $estado = $curso->getEstado();
 
@@ -159,15 +161,16 @@ class ModeloCurso {
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
     // ACTUALIZAR LA CANTIDAD DE PREGUNTAS
-    function actualizarNumeroPreguntas(Curso $curso) {
+    function actualizarNumeroPreguntas(Curso $curso)
+    {
         $codigo = $curso->getCodigo();
         $cantidad = $curso->getCan_pregutas();
 
@@ -188,15 +191,16 @@ class ModeloCurso {
             $actualizar->closeCursor();
         } catch (Exception $e) {
             $array[] = 2;
-            $array[] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
     //ELIMINAR CURSO
-    function eliminarCapacitacion($codigo, $id) {
+    function eliminarCapacitacion($codigo, $id)
+    {
         try {
             require_once "../../controlador/pregunta.controlador.php";
             $controlPre = new ControladorPregunta(2);
@@ -216,15 +220,16 @@ class ModeloCurso {
             }
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
     // BUSCAR UN CURSO
-    function buscarCurso($id) {
+    function buscarCurso($id)
+    {
         try {
             $sql = "SELECT * FROM capacitaciones WHERE id= :id_curso";
             $consulta = $this->db->prepare($sql);
@@ -246,20 +251,21 @@ class ModeloCurso {
                 $consulta->closeCursor();
             } else {
                 $array[0] = 3;
-                $array[1] = "Este curso no existe"; //. $e->getLine();
+                $array[1] = "Este curso no existe";
             }
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
-            die("Error :" . $e->getMessage());
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
     // LISTAR TODOS LOS CURSOS 
-    function listar($busqueda, $estado, $empieza, $finaliza) {
+    function listar($busqueda, $estado, $empieza, $finaliza)
+    {
         try {
 
             if (empty($busqueda) && (!empty(trim($finaliza))) && (empty(trim($estado)))) {
@@ -323,16 +329,17 @@ class ModeloCurso {
             }
 
             $consulta->closeCursor();
-            return $array;
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
-            return $array;
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+
             die("Error :" . $e->getMessage());
         }
+        return $array;
     }
 
-    function listarInscritos($id) {
+    function listarInscritos($id)
+    {
         try {
             $sql = "SELECT COUNT(id) FROM `capacitaciones_usuarios` WHERE id_capacitacion= :idCap";
             $consulta = $this->db->prepare($sql);
@@ -347,13 +354,14 @@ class ModeloCurso {
             $consulta->closeCursor();
         } catch (Exception $e) {
             $array[0] = 2;
-            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte "; //. $e->getLine();
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
             return $array;
             die("Error :" . $e->getMessage());
         }
     }
 
-    function listarCursosInscritos($buscar, $empieza, $finaliza, $id) {
+    function listarCursosInscritos($buscar, $empieza, $finaliza, $id)
+    {
         try {
             $estado = 1;
             if (empty($buscar)) {
@@ -397,14 +405,14 @@ class ModeloCurso {
         } catch (Exception $e) {
             $array[0] = 2;
             $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
-
             // echo $e->getLine();
             // die("Error :" . $e->getMessage());
         }
         return $array;
     }
 
-    function cantidadCurso($busqueda, $idusuario, $rol, $estado) {
+    function cantidadCurso($busqueda, $idusuario, $rol, $estado)
+    {
         try {
             if ($rol == 'Administrador general') {
                 if (empty(trim($busqueda))) {
@@ -448,10 +456,186 @@ class ModeloCurso {
             }
             $consulta->closeCursor();
         } catch (Exception $e) {
-            return "Ha ocurrido un error si el error persiste comuníquese con soporte ";
             // echo $e->getLine();
             // die("Error :" . $e->getMessage());
+            return "Ha ocurrido un error si el error persiste comuníquese con soporte ";
         }
     }
 
+
+    // LISTAR TODOS LOS CURSOS 
+    function empresaBuscarCurso($id, $busqueda, $empieza, $finaliza)
+    {
+        try {
+            $estado = 1;
+            if (empty($busqueda)) {
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` 
+                INNER JOIN capacitaciones_empresa ON capacitaciones_empresa.id_capacitacion = capacitaciones.id 
+                WHERE capacitaciones_empresa.id_empresa =:idempresa AND capacitaciones.estado=:estado ORDER BY capacitaciones.id DESC limit :inicia, :fin";
+                $consulta = $this->db->prepare($sql);
+            } else {
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` 
+                INNER JOIN capacitaciones_empresa ON capacitaciones_empresa.id_capacitacion = capacitaciones.id 
+                WHERE capacitaciones_empresa.id_empresa =:idempresa AND capacitaciones.estado=:estado AND (capacitaciones.nombre LIKE :buscar  OR capacitaciones.descripcion LIKE :buscar) ORDER BY capacitaciones.id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":buscar", $busqueda, PDO::PARAM_STR);
+            }
+            $consulta->bindParam(":idempresa", $id, PDO::PARAM_INT);
+            $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+            $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+            $consulta->execute();
+            if ($consulta->rowCount() > 0) {
+                while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $capacitacion = new Curso();
+                    $capacitacion->setId($fila['id']);
+                    $capacitacion->setNombre($fila['nombre']);
+                    $capacitacion->setCodigo($fila['codigo']);
+                    $capacitacion->setDescripcion($fila['descripcion']);
+                    $capacitacion->setCan_pregutas($fila['numero_preguntas']);
+                    $capacitacion->setTiempo($fila['tiempo']);
+                    $capacitacion->setEstado($fila['estado']);
+                    $capacitacion->setUrl($fila['link_video']);
+                    $capacitacion->setImagen($fila['imagen']);
+                    $array[] = $capacitacion;
+                }
+            } else {
+                $array[0] = 3;
+                $array[1] = "No hay capacitaciónes asignadas";
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
+        return $array;
+    }
+
+
+    // LISTAR TODOS LOS CURSOS 
+    function sedeBuscarCurso($id, $busqueda, $empieza, $finaliza)
+    {
+        try {
+            $estado = 1;
+            if (empty($busqueda)) {
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` 
+                INNER JOIN capacitaciones_sede ON capacitaciones_sede.id_capacitacion = capacitaciones.id 
+                WHERE capacitaciones_sede.id_sede =:idsede AND capacitaciones.estado=:estado ORDER BY capacitaciones.id DESC limit :inicia, :fin";
+                $consulta = $this->db->prepare($sql);
+            } else {
+                $sql = "SELECT capacitaciones.* FROM `capacitaciones` 
+                INNER JOIN capacitaciones_sede ON capacitaciones_sede.id_capacitacion = capacitaciones.id 
+                WHERE capacitaciones_sede.id_sede =:idsede AND capacitaciones.estado=:estado AND (capacitaciones.nombre LIKE :buscar  OR capacitaciones.descripcion LIKE :buscar) ORDER BY capacitaciones.id DESC limit :inicia, :fin ";
+                $consulta = $this->db->prepare($sql);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":buscar", $busqueda, PDO::PARAM_STR);
+            }
+            $consulta->bindParam(":idsede", $id, PDO::PARAM_INT);
+            $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
+            $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
+            $consulta->execute();
+            if ($consulta->rowCount() > 0) {
+                while ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $capacitacion = new Curso();
+                    $capacitacion->setId($fila['id']);
+                    $capacitacion->setNombre($fila['nombre']);
+                    $capacitacion->setCodigo($fila['codigo']);
+                    $capacitacion->setDescripcion($fila['descripcion']);
+                    $capacitacion->setCan_pregutas($fila['numero_preguntas']);
+                    $capacitacion->setTiempo($fila['tiempo']);
+                    $capacitacion->setEstado($fila['estado']);
+                    $capacitacion->setUrl($fila['link_video']);
+                    $capacitacion->setImagen($fila['imagen']);
+                    $array[] = $capacitacion;
+                }
+            } else {
+                $array[0] = 3;
+                $array[1] = "No hay capacitaciónes asignadas";
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            $array[0] = 2;
+            $array[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
+        return $array;
+    }
+
+
+    function cantidadCursoEmpresa($busqueda, $idempresa)
+    {
+        try {
+            $estado = 1;
+            if (empty(trim($busqueda))) {
+                $sql = "SELECT COUNT(capacitaciones_empresa.id) FROM `capacitaciones_empresa`   
+                    INNER JOIN capacitaciones ON  capacitaciones.id = capacitaciones_empresa.id_capacitacion
+                    WHERE capacitaciones_empresa.id_empresa=:empresa AND capacitaciones.estado=:estado";
+                $consulta = $this->db->prepare($sql);
+            } else {
+                $sql = "SELECT COUNT(capacitaciones_empresa.id) FROM `capacitaciones_empresa` 
+                    INNER JOIN capacitaciones ON  capacitaciones.id = capacitaciones_empresa.id_capacitacion
+                    WHERE capacitaciones_empresa.id_empresa=:empresa AND capacitaciones.estado=:estado AND (nombre LIKE :nombre OR descripcion LIKE :nombre)";
+                $consulta = $this->db->prepare($sql);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
+            }
+
+            $consulta->bindParam(":empresa", $idempresa, PDO::PARAM_INT);
+            $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            $consulta->execute();
+
+            if ($consulta->rowCount() > 0) {
+                $fila = $consulta->fetch(PDO::FETCH_ASSOC);
+                return $fila['COUNT(capacitaciones_empresa.id)'];
+            } else {
+                return 0;
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+            return "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+        }
+    }
+
+    function cantidadCursoSede($busqueda, $idempresa)
+    {
+        try {
+            $estado = 1;
+            if (empty(trim($busqueda))) {
+                $sql = "SELECT COUNT(capacitaciones_sede.id) FROM `capacitaciones_sede`   
+                    INNER JOIN capacitaciones ON  capacitaciones.id = capacitaciones_sede.id_capacitacion
+                    WHERE capacitaciones_sede.id_sede=:sede AND capacitaciones.estado=:estado";
+                $consulta = $this->db->prepare($sql);
+            } else {
+                $sql = "SELECT COUNT(capacitaciones_sede.id) FROM `capacitaciones_sede` 
+                    INNER JOIN capacitaciones ON  capacitaciones.id = capacitaciones_sede.id_capacitacion
+                    WHERE capacitaciones_sede.id_sede=:sede AND capacitaciones.estado=:estado AND (nombre LIKE :nombre OR descripcion LIKE :nombre)";
+                $consulta = $this->db->prepare($sql);
+                $busqueda = '%' . $busqueda . '%';
+                $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
+            }
+
+            $consulta->bindParam(":sede", $idempresa, PDO::PARAM_INT);
+            $consulta->bindParam(":estado", $estado, PDO::PARAM_INT);
+            $consulta->execute();
+
+            if ($consulta->rowCount() > 0) {
+                $fila = $consulta->fetch(PDO::FETCH_ASSOC);
+                return $fila['COUNT(capacitaciones_sede.id)'];
+            } else {
+                return 0;
+            }
+            $consulta->closeCursor();
+        } catch (Exception $e) {
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+            return "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+        }
+    }
 }
