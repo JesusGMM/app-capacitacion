@@ -8,10 +8,10 @@
   <title>App Capacitacion</title>
   <!-- Estilo de boostrapt -->
 
-  <link href="../componentes/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Estilo de personalizados -->
-  <link href="../componentes/css/login.css" rel="stylesheet">
-  <link href="../componentes/select/css/select2.min.css" rel="stylesheet">
+  <link href="../componentes/css/estilos.css" rel="stylesheet">
+  <link href="../vendor/select2/select2/dist/css/select2.min.css" rel="stylesheet">
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 

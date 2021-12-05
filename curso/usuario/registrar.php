@@ -5,6 +5,7 @@ $user = new ControladorUsuario(1);
 $empre = new EmpresaControlador(1);
 $empresas = $empre->listarEmpresaTodas(1,1);
 $registro = $user->crear($_POST);
+var_dump($registro);
 if ($registro[0] == 1) { ?>
     <script type="text/javascript">
         Swal.fire({
@@ -53,7 +54,7 @@ if ($registro[0] == 1) { ?>
 <div class="container padin">
     <h3 style="text-align:center; margin-bottom: 2%;">Registrar Usuario</h3>
     <form method="post" class="row g-3 needs-validation-usuario" id="form-crear-usuario" novalidate>
-        <div class="col-md-6">
+        <div class="col-md-6" id="cargar-empresas">
             <label for="empresa" class="form-label" style="margin-bottom: 2.5%;">Empresa</label>
             <select class="form-select" name="idempresa" id="empresa" onchange="listarSedesEmpresa($(this).val(),1)" required>
                 <option></option>
@@ -88,14 +89,14 @@ if ($registro[0] == 1) { ?>
         </div>
         <div class="col-md-6">
             <label for="inputEmail4" class="form-label">Email</label>
-            <input name="correo" type="email" class="form-control" id="inputEmail4" placeholder="Correo electrónico" value="<?php if (isset($_POST['correo'])) echo $_POST['correo']; ?>" required>
+            <input name="email" type="email" class="form-control" id="inputEmail4" placeholder="Correo electrónico" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" required>
             <div class="invalid-feedback">
                 Correo electronico es requerido
             </div>
         </div>
         <div class="col-md-6">
             <label for="perfil" class="form-label">Tipo de usuario</label>
-            <select name="roles" id="perfil" class="form-select" required>
+            <select name="roles" id="perfil" class="form-select" onchange="validarPerfil($(this).val())" required>
                 <option value="2">Estudiante</option>
                 <option value="1">Administrador</option>
             </select>

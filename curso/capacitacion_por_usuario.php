@@ -19,6 +19,7 @@ if (is_array($usu)) {
             <?php require_once 'usuario/mis_resultados.php'; ?>
         </div>
     </div>
+</div>
 <?php
 
 } else {
@@ -28,3 +29,4 @@ if (is_array($usu)) {
     </div>
 <?php
 }
+

@@ -29,7 +29,7 @@ class ModeloLogin
             $persona->setId($fila['id']);
             $persona->setNombre($fila['nombre']);
             $persona->setApellido($fila['apellido']);
-            $persona->setRol($fila['rol']);
+            $persona->setEstado($fila['estado']);
             $personas[] = $persona;
             $consulta->closeCursor();
             return $personas;

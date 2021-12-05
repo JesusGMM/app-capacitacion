@@ -3,8 +3,8 @@ if (isset($_SESSION["iniciarSesionAppCap"]) && $_SESSION["iniciarSesionAppCap"] 
 ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light nav-fijo">
         <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="../componentes/logos/logo-menu.png" alt=""  height="40">
+            <a class="navbar-brand" href="#">
+                <img src="../componentes/logos/logo-menu.png" alt="" height="40">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -26,18 +26,26 @@ if (isset($_SESSION["iniciarSesionAppCap"]) && $_SESSION["iniciarSesionAppCap"] 
                         <a class="nav-link" href="../curso/?id=<?php echo $_SESSION['id_app_cap']; ?>">Mis resultados</a>
                     </li>
                     <?php if ($usuario[0]->getRol() == 'Administrador general') { ?>
-                       
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Empresas
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">                          
-                                <li><a class="dropdown-item" href="../curso/?lista-empresa">Listar empresas</a></li>
-                                <li><a class="dropdown-item" href="../curso/?lista-sede">Listar sedes</a></li>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a class="dropdown-item" href="../curso/?registrar-empresa">Crear empresa</a></li>
-                                <li><a class="dropdown-item" href="../curso/?registrar-sede">Crear sede</a></li>
+                                <li><a class="dropdown-item" href="../curso/?lista-empresa">Listar empresas</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sedes
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="../curso/?registrar-sede">Crear sede</a></li>
+                                <li><a class="dropdown-item" href="../curso/?lista-sede">Listar sedes</a></li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Usuarios
@@ -56,7 +64,9 @@ if (isset($_SESSION["iniciarSesionAppCap"]) && $_SESSION["iniciarSesionAppCap"] 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mi perfil</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="right: 0; left: auto;">
-                            <li><a class="dropdown-item" href="cerrar_sesion.php">Editar perfil</a></li>
+                            <li><a class="dropdown-item" onclick="miPerfil('datos')">Mis datos</a></li>
+                            <li><a class="dropdown-item" onclick="miPerfil('editar')" >Editar perfil</a></li>
+                            <li><a class="dropdown-item" onclick="miPerfil('cambiar')">Cambiar contraseña</a></li>
                             <li><a class="dropdown-item" href="cerrar_sesion.php">Cerrar sesión</a></li>
                         </ul>
                     </li>

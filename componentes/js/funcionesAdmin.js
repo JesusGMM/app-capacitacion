@@ -1,11 +1,10 @@
-
-$(document).ready(function() {
-  $('#empresa').select2({
+$(document).ready(function () {
+  $("#empresa").select2({
     theme: "classic",
     placeholder: "Seleccionar empresa",
   });
-  $('#sede').select2({
-    theme: "classic"
+  $("#sede").select2({
+    theme: "classic",
   });
 });
 
@@ -35,7 +34,7 @@ $(document).ready(function() {
         if (!form.checkValidity()) {
           event.preventDefault();
           event.stopPropagation();
-        } 
+        }
         form.classList.add("was-validated");
       },
       false
@@ -253,11 +252,11 @@ function buscarUsuario(pag) {
   });
 }
 
-function listarSedesEmpresa(id,accion){
+function listarSedesEmpresa(id, accion) {
   $.ajax({
     url: "componentes/listar_sedes.php",
     method: "POST",
-    data: { idempresa: id, acion:accion },
+    data: { idempresa: id, acion: accion },
     success: function (usuarios) {
       $("#cargar-sedes").html(usuarios);
     },
@@ -623,4 +622,16 @@ function eliminarSedeComfirmado(id) {
       $("#id_respuesta").html(id_respuesta);
     },
   });
+}
+
+function validarPerfil(perfil) {
+  if (perfil == 1) {
+    $("#cargar-sedes").hide();
+    $("#cargar-empresas").hide();
+    $('#empresa').attr('required', false)
+  } else {
+    $("#cargar-sedes").show();
+    $("#cargar-empresas").show();
+    $('#empresa').attr('required', true);
+  }
 }

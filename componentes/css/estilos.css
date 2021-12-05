@@ -88,3 +88,6 @@ input[type=number] { -moz-appearance:textfield; }
 .input-group .form-control.is-valid, .input-group .form-select.is-valid, .was-validated .input-group .form-control:valid, .was-validated .input-group .form-select:valid {
   z-index: auto;
 }
+.dropdown-item{
+  cursor: pointer;
+}

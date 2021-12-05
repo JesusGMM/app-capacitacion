@@ -4,6 +4,7 @@ if (isset($_POST['buscar'])) {
     $buscar = $_POST['buscar'];
     $pagina = $_POST['pagina'];
     $var = 2;
+    session_start();
 } else {
     $var = 1;
     $buscar = ""; 
@@ -16,7 +17,6 @@ if (isset($_POST['buscar'])) {
 <?php
 
 }
-
 $fin = 12;
 $empieza = ($pagina - 1) * $fin;
 

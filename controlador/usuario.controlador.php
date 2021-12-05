@@ -29,11 +29,16 @@ class ControladorUsuario
                 $array = $personaMo->validarUsuario($arr['usuario']);
                 if ($array[0] == 1) {
                     $persona = new Persona();
-                    $persona->setIdempresa($arr["idempresa"]);
-                    $persona->setIdsede($arr["idsede"]);
+                    if ($arr["perfil"] == 2) {
+                        $persona->setIdempresa($arr["idempresa"]);
+                        $persona->setIdsede($arr["idsede"]);
+                    } else {
+                        $persona->setIdempresa(0);
+                        $persona->setIdsede(0);
+                    }
                     $persona->setNombre($arr["nombre"]);
                     $persona->setApellido($arr["apellido"]);
-                    $persona->setEmail($arr["correo"]);
+                    $persona->setEmail($arr["email"]);
                     $persona->setUsuario($arr["usuario"]);
                     $persona->setPassword($arr["contrasena"]);
                     $persona->setRol($arr["roles"]);
@@ -76,8 +81,13 @@ class ControladorUsuario
                 $personaMo = new ModeloUsuario(2);
                 $persona = new Persona();
                 $persona->setId($arr['id']);
-                $persona->setIdempresa($arr["idempresa"]);
-                $persona->setIdsede($arr["idsede"]);
+                if ($arr["perfil"] == 2) {
+                    $persona->setIdempresa($arr["idempresa"]);
+                    $persona->setIdsede($arr["idsede"]);
+                } else {
+                    $persona->setIdempresa(0);
+                    $persona->setIdsede(0);
+                }
                 $persona->setNombre($arr["nombre"]);
                 $persona->setApellido($arr["apellido"]);
                 $persona->setEmail($arr["email"]);
@@ -96,6 +106,44 @@ class ControladorUsuario
             $array[0] = 0;
             return $array;
         }
+    }
+
+    function editarPerfil($arr)
+    {
+        if ($arr != null) {
+            $dato = validar($arr);
+            if ($dato[0] == 1) {
+                $personaMo = new ModeloUsuario(2);
+                $persona = new Persona();
+                $persona->setId($arr['id']);
+                $persona->setNombre($arr["nombre"]);
+                $persona->setApellido($arr["apellido"]);
+                $persona->setEmail($arr["email"]);
+                $persona->setUsuario($arr["usuario"]);
+                $persona->setCodigo($arr["codigo"]);
+                return $personaMo->actualizarPerfil($persona);
+            } else {
+                return $dato;
+            }
+        } else {
+            $array[0] = 0;
+            return $array;
+        }
+    }
+
+    function editarClave($arr)
+    {
+        if ($arr != null) {
+            $personaMo = new ModeloUsuario(2);
+            $array = $personaMo->validarClave($arr['id'], hash('whirlpool', $arr['clave']));
+            if ($array[0] == 1) {
+                return $personaMo->actualizarPassword($arr['id'], hash('whirlpool', $arr['clave-nueva1']));
+            }
+        } else {
+            $array[0] = 2;
+            $array[1] = "Datos Invalidos";
+        }
+        return $array;
     }
 
     function eliminar($id)

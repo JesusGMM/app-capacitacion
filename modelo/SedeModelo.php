@@ -504,6 +504,7 @@ class SedeModelo
         $sede->setLogo($fila['logo']);
         $sede->setCapacitaciones($this->obtenerCapacitaciones($fila['id']));
         $sede->setUsuario($this->obtenerUsuariosActivos($fila['id']));
+        $sede->setIdempresa($fila['id_empresa']);
         return $sede;
     }
 }

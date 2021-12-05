@@ -8,7 +8,7 @@ $sedes = $sedecontrol->listarSedes($usu[0]->getIdempresa(), 1, 2);
 foreach ($usu as $usuario) { ?>
     <form method="post" id="form-editar" class="row g-3 needs-validation-usuario" novalidate>
         <input type="hidden" name="id" value="<?php echo $usuario->getId(); ?>" />
-        <div class="col-md-6">
+        <div class="col-md-6" id="cargar-empresas" <?php if ($usuario->getRol() == "Administrador general") echo "style='display: none;'"; ?>>
             <label for="empresa" class="form-label" style="margin-bottom: 2.5%;">Empresa</label>
             <select class="form-select" name="idempresa" id="empresa-editar" onchange="listarSedesEmpresa($(this).val(),2)" required>
                 <?php
@@ -22,7 +22,7 @@ foreach ($usu as $usuario) { ?>
                 } ?>
             </select>
         </div>
-        <div class="col-md-6" id="cargar-sedes">
+        <div class="col-md-6" id="cargar-sedes" <?php if ($usuario->getRol() == "Administrador general") echo "style='display: none;'"; ?>>
             <label for="sede" class="form-label" style="margin-bottom: 2.5%;">Sede</label>
             <select class="form-select" name="idsede" id="sede-editar">
                 <option value="0">Sin sede</option>
@@ -51,9 +51,9 @@ foreach ($usu as $usuario) { ?>
         </div>
         <div class="col-md-6">
             <label for="perfil" class="form-label">Tipo de usuario</label>
-            <select name="perfil" id="perfil" class="form-select" required>
+            <select name="perfil" id="perfil" class="form-select" onchange="validarPerfil($(this).val())" required>
                 <option value='1'>Administrador</option>
-                <option value='2' <?php if ($usuario->getRol() == "Capacitante") echo "selected"; ?>>Estudiante</option>
+                <option value='2' <?php if ($usuario->getRol() == "Estudiante") echo "selected"; ?>>Estudiante</option>
             </select>
         </div>
         <div class="col-md-6">

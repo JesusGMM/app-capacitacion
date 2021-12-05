@@ -116,8 +116,7 @@ class ModeloUsuario
             $actualizar->bindParam(":sede", $sedeid, PDO::PARAM_INT);
             $actualizar->execute();
 
-            if (!empty(($contrasena))) {
-                $contrasena = hash('whirlpool', $contrasena);
+            if ($contrasena != hash('whirlpool', "")) {
                 $sql_contrasena = "UPDATE `usuarios` SET contrasena=:contrasena WHERE id = :id";
                 $actualizar_pasword = $this->db->prepare($sql_contrasena);
                 $actualizar_pasword->bindParam(":id", $id, PDO::PARAM_INT);
@@ -130,7 +129,7 @@ class ModeloUsuario
             if ($actualizar->rowCount() > 0) {
                 $personas[] = 1;
                 $personas[] = "Usuario actualizado";
-            } else if (empty(($contrasena))) {
+            } else if ($contrasena == hash('whirlpool', "")) {
                 $personas[] = 3;
                 $personas[] = "Usuario no actualizado inténtelo nuevamente";
             }
@@ -144,6 +143,92 @@ class ModeloUsuario
         return $personas;
     }
 
+    function actualizarPerfil(Persona $usuario)
+    {
+        $id = $usuario->getId();
+        $codigo = $usuario->getCodigo();
+        $nombre = $usuario->getNombre();
+        $apellido = $usuario->getApellido();
+        $nombre_usu = $usuario->getUsuario();
+        $correo = $usuario->getEmail();
+
+        try {
+            $sql = "UPDATE `usuarios` SET codigo = :codigo, nombre = :nombre, apellido = :apellido, usuario = :usuario, correo = :correo WHERE id= :id";
+            $actualizar = $this->db->prepare($sql);
+            $actualizar->bindParam(":id", $id, PDO::PARAM_INT);
+            $actualizar->bindParam(":codigo", $codigo, PDO::PARAM_STR);
+            $actualizar->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+            $actualizar->bindParam(":apellido", $apellido, PDO::PARAM_STR);
+            $actualizar->bindParam(":usuario", $nombre_usu, PDO::PARAM_STR);
+            $actualizar->bindParam(":correo", $correo, PDO::PARAM_STR);
+            $actualizar->execute();
+            if ($actualizar->rowCount() > 0) {
+                $personas[] = 1;
+                $personas[] = "Perfil actualizado";
+            } else {
+                $personas[] = 3;
+                $personas[] = "perfil no actualizado inténtelo nuevamente";
+            }
+            $actualizar->closeCursor();
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
+
+    function validarClave($nomusu, $pasw)
+    {
+        try {
+            $sql = "SELECT * FROM usuarios WHERE id=:usuario and contrasena=:contrasena";
+            $consulta = $this->db->prepare($sql);
+            $consulta->bindParam(":usuario", $nomusu, PDO::PARAM_STR);
+            $consulta->bindParam(":contrasena", $pasw, PDO::PARAM_STR);
+            $consulta->execute();
+            if ($consulta->rowCount() > 0) {
+                $personas[] = 1;
+                $personas[] = "Puede continuar";
+            } else {
+                $personas[] = 3;
+                $personas[] = $pasw;
+            }
+
+            $consulta->closeCursor();
+            return $personas;
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
+    }
+
+    function actualizarPassword($id, $password)
+    {
+        try {
+            $sql_contrasena = "UPDATE `usuarios` SET contrasena=:contrasena WHERE id = :id";
+            $actualizar_pasword = $this->db->prepare($sql_contrasena);
+            $actualizar_pasword->bindParam(":id", $id, PDO::PARAM_INT);
+            $actualizar_pasword->bindParam(":contrasena", $password, PDO::PARAM_STR);
+            $actualizar_pasword->execute();
+            $actualizar_pasword->closeCursor();
+            if ($actualizar_pasword->rowCount() > 0) {
+                $personas[] = 1;
+                $personas[] = "Contraseña actualizada";
+            } else {
+                $personas[] = 3;
+                $personas[] = "La Contraseña no se pudo actualizar inténtelo nuevamente";
+            }
+        } catch (Exception $e) {
+            $personas[0] = 2;
+            $personas[1] = "Ha ocurrido un error si el error persiste comuníquese con soporte ";
+            // echo $e->getLine();
+            // die("Error :" . $e->getMessage());
+        }
+        return $personas;
+    }
 
     function actualizarEstado($id, $estado)
     {
@@ -239,15 +324,16 @@ class ModeloUsuario
     {
         try {
             if (empty($busqueda)) {
-                $sql = "SELECT * FROM usuarios ORDER BY id DESC limit :inicia, :fin ";
+                $sql = "SELECT * FROM usuarios WHERE id !=:id ORDER BY id DESC limit :inicia, :fin ";
                 $consulta = $this->db->prepare($sql);
             } else {
-                $sql = "SELECT * FROM usuarios WHERE nombre LIKE :nombre OR apellido LIKE :nombre OR codigo LIKE :nombre ORDER BY id DESC limit :inicia, :fin ";
+                $sql = "SELECT * FROM usuarios WHERE id !=:id AND (nombre LIKE :nombre OR apellido LIKE :nombre OR codigo LIKE :nombre) ORDER BY id DESC limit :inicia, :fin ";
                 $consulta = $this->db->prepare($sql);
                 $busqueda = '%' . $busqueda . '%';
                 $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
             }
 
+            $consulta->bindParam(":id", $_SESSION['id_app_cap'], PDO::PARAM_INT);
             $consulta->bindParam(":inicia", $empieza, PDO::PARAM_INT);
             $consulta->bindParam(":fin", $finaliza, PDO::PARAM_INT);
             $consulta->execute();
@@ -742,15 +828,15 @@ class ModeloUsuario
     {
         try {
             if (empty($busqueda)) {
-                $sql = "SELECT COUNT(id) FROM `usuarios`";
+                $sql = "SELECT COUNT(id) FROM `usuarios` WHERE id !=:id ";
                 $consulta = $this->db->prepare($sql);
             } else {
-                $sql = "SELECT  COUNT(id) FROM usuarios WHERE nombre LIKE :nombre OR apellido LIKE :nombre OR codigo LIKE :nombre";
+                $sql = "SELECT  COUNT(id) FROM usuarios WHERE id !=:id AND (nombre LIKE :nombre OR apellido LIKE :nombre OR codigo LIKE :nombre)";
                 $consulta = $this->db->prepare($sql);
                 $busqueda = '%' . $busqueda . '%';
                 $consulta->bindParam(":nombre", $busqueda, PDO::PARAM_STR);
             }
-
+            $consulta->bindParam(":id", $_SESSION['id_app_cap'], PDO::PARAM_INT);
             $consulta->execute();
             if ($fila = $consulta->fetch(PDO::FETCH_ASSOC)) {
                 return $fila['COUNT(id)'];
