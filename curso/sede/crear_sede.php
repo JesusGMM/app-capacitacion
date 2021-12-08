@@ -5,7 +5,7 @@ require_once "../controlador/sedecontrolador.php";
 $sedecontrol = new SedeControlador(1);
 $empre = new EmpresaControlador(1);
 $registro = $sedecontrol->crear($_POST);
-$empresas = $empre->listarEmpresaTodas(1,1);
+$empresas = $empre->listarEmpresaTodas(1, 1);
 if ($registro[0] == 1) { ?>
     <script type="text/javascript">
         Swal.fire({
@@ -51,14 +51,16 @@ if ($registro[0] == 1) { ?>
 
 <div class="container padin">
     <h2 style="text-align: center;">Registrar Sede</h2>
-    <form class="row g-3 needs-validation-sede" method="post"  enctype="multipart/form-data" novalidate>
+    <form class="row g-3 needs-validation-sede" method="post" enctype="multipart/form-data" novalidate>
         <div class="col-md-6">
             <label for="empresa" class="form-label" style="margin-bottom: 2.5%;">Empresa</label>
             <select class="form-select" name="idempresa" id="empresa" required>
                 <option></option>
                 <?php
-                foreach ($empresas as $empresa) {
-                    echo '<option value="' . $empresa->getId() . '">' . $empresa->getNombre() . '</option>';
+                if (is_object($empresas[0])) {
+                    foreach ($empresas as $empresa) {
+                        echo '<option value="' . $empresa->getId() . '">' . $empresa->getNombre() . '</option>';
+                    }
                 } ?>
             </select>
             <div class="invalid-feedback">

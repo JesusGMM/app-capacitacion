@@ -192,7 +192,7 @@ class ModeloUsuario
                 $personas[] = "Puede continuar";
             } else {
                 $personas[] = 3;
-                $personas[] = $pasw;
+                $personas[] = "La contraseña ingresada es incorrecta";
             }
 
             $consulta->closeCursor();

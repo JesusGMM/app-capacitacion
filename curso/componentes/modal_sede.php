@@ -67,7 +67,7 @@ if (isset($_POST['accion'])) {
                     } else if ($_POST['accion'] == 'asignar') {
                         require_once '../sede/asignacion.php';
                     } else if ($_POST['accion'] == 'detalles') {
-                        require_once 'detalles_curso.php';
+                        require_once '../sede/detalles_curso.php';
                     } ?>
                 </div>
                 <div class="modal-footer">

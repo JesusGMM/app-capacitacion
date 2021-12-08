@@ -27,81 +27,83 @@ if (is_array($usu)) {
     foreach ($usu as $usuarios) {
         $curso = new ControladorCurso($var);
         $sincursos = true;
-        $capacitacion = $curso->listarCapacitacion($usuarios->getRol(), $usuarios->getId(), $buscar, "", $empieza, $fin, $var);
+        $capacitacion = $curso->listarCapacitacionResultados($usuarios->getRol(), $usuarios->getId(), $buscar, "", $empieza, $fin, $var);
+
         if (is_object($capacitacion[0])) {
             foreach ($capacitacion as $cap) {
                 $cap_asignada = $user->validarCurso($usuarios->getId(), $cap->getId(), $var);
-                if ($cap_asignada[0] == 1) {
-                    $sincursos = false;
+                    if ($cap_asignada[0] == 1) {
+                        if (($cap->getEstado() == 1) || (($cap_asignada[2] == 2 AND  $cap->getEstado() == 2) || $usuario[0]->getRol() == 'Administrador general')) {
+                        $sincursos = false;
 ?>
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-header" style="text-align: center;"><b><?php echo $cap->getNombre(); ?></b></div>
-                            <?php
-                            if (!empty(trim($cap->getImagen())))
-                                echo '<img style="height: 220px; padding:1%;" src="../componentes/imagenes/' . $cap->getImagen() . '" class="card-img-top" alt="Capacitación sin imagen">';
-                            else
-                                echo 'no hay imagen';
-                            ?>
-                            <div class="card-body">
-                                Cantidad de preguntas:
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header" style="text-align: center;"><b><?php echo $cap->getNombre(); ?></b></div>
                                 <?php
-                                echo $cap->getCan_pregutas();
+                                if (!empty(trim($cap->getImagen())))
+                                    echo '<img style="height: 220px; padding:1%;" src="../componentes/imagenes/' . $cap->getImagen() . '" class="card-img-top" alt="Capacitación sin imagen">';
+                                else
+                                    echo 'no hay imagen';
+                                ?>
+                                <div class="card-body">
+                                    Cantidad de preguntas:
+                                    <?php
+                                    echo $cap->getCan_pregutas();
 
-                                if ($cap_asignada[2] != 0) {
-                                    $acertadas = $user->resultados($usuarios->getId(), $cap->getId(), $cap->getCan_pregutas(), $var);
-                                    if (is_numeric($acertadas[1])) {
-                                        echo "<br>";
-                                        echo "Puntaje total: <b>" . $acertadas[10];
-                                        echo "%</b><br>";
-                                        echo "<br>";
-                                        echo "<b>{$acertadas[0]}</b><br>";
-                                        echo "Preguntas acertadas: " . $acertadas[1];
-                                        echo "<br>";
-                                        echo "Preguntas perdidas: " . $acertadas[2];
-                                        echo "<br>";
-                                        echo "Preguntas sin responder: " . $acertadas[3];
-                                        echo "<br>";
-                                        echo "Puntaje fase 1: <b>" . $acertadas[4];
-                                        echo "%</b><br>";
-                                        echo "<b>{$acertadas[5]}</b><br>";
-                                        echo "Preguntas acertadas: " . $acertadas[6];
-                                        echo "<br>";
-                                        echo "Preguntas perdidas: " . $acertadas[7];
-                                        echo "<br>";
-                                        echo "Preguntas sin responder: " . $acertadas[8];
-                                        echo "<br>";
-                                        echo "Puntaje fase 3: <b>" . $acertadas[9];
-                                        echo "%</b><br>";
-                                    } else {
-                                        echo "<br> <b>";
-                                        echo $acertadas[1] . "</b>";
-                                    }
-                                } else if ($usuario[0]->getRol() == 'Administrador general') echo "<br><b>Capacitación sin resolver</b>"; ?>
-
-
-                            </div>
-                            <div class="card-footer" style="text-align: center;">
-                                <?php
-                                if ($cap_asignada[2] != 0) {
-                                    echo '<a href="../curso/?ver-resulatados=' . $cap->getId() . '&idUsu=' . $_GET['id'] . '" class="btn btn-success" style="margin-top:2%">Revisar</a>';
-                                } else if ($usuario[0]->getRol() == 'Administrador general') {
-                                    echo "<button type='button' class='btn btn-danger'  onclick='quitarCapacitacionUsuario(" .  $cap->getId() . ',' .  $usuarios->getId() . ")'>Quitar capacitación</button>"; ?>
-                    
-                                    <div id="id_respuesta">
-                                    </div>
-                                <?php } else echo "<b>Capacitación sin resolver</b>"; ?>
+                                    if ($cap_asignada[2] != 0) {
+                                        $acertadas = $user->resultados($usuarios->getId(), $cap->getId(), $cap->getCan_pregutas(), $var);
+                                        if (is_numeric($acertadas[1])) {
+                                            echo "<br>";
+                                            echo "Puntaje total: <b>" . $acertadas[10];
+                                            echo "%</b><br>";
+                                            echo "<br>";
+                                            echo "<b>{$acertadas[0]}</b><br>";
+                                            echo "Preguntas acertadas: " . $acertadas[1];
+                                            echo "<br>";
+                                            echo "Preguntas perdidas: " . $acertadas[2];
+                                            echo "<br>";
+                                            echo "Preguntas sin responder: " . $acertadas[3];
+                                            echo "<br>";
+                                            echo "Puntaje fase 1: <b>" . $acertadas[4];
+                                            echo "%</b><br>";
+                                            echo "<b>{$acertadas[5]}</b><br>";
+                                            echo "Preguntas acertadas: " . $acertadas[6];
+                                            echo "<br>";
+                                            echo "Preguntas perdidas: " . $acertadas[7];
+                                            echo "<br>";
+                                            echo "Preguntas sin responder: " . $acertadas[8];
+                                            echo "<br>";
+                                            echo "Puntaje fase 3: <b>" . $acertadas[9];
+                                            echo "%</b><br>";
+                                        } else {
+                                            echo "<br> <b>";
+                                            echo $acertadas[1] . "</b>";
+                                        }
+                                    } else if ($usuario[0]->getRol() == 'Administrador general') echo "<br><b>Capacitación sin resolver</b>"; ?>
 
 
+                                </div>
+                                <div class="card-footer" style="text-align: center;">
+                                    <?php
+                                    if ($cap_asignada[2] != 0) {
+                                        echo '<a href="../curso/?ver-resulatados=' . $cap->getId() . '&idUsu=' . $_GET['id'] . '" class="btn btn-success" style="margin-top:2%">Revisar</a>';
+                                    } else if ($usuario[0]->getRol() == 'Administrador general') {
+                                        echo "<button type='button' class='btn btn-danger'  onclick='quitarCapacitacionUsuario(" .  $cap->getId() . ',' .  $usuarios->getId() . ")'>Quitar capacitación</button>"; ?>
+
+                                        <div id="id_respuesta">
+                                        </div>
+                                    <?php } else echo "<b>Capacitación sin resolver</b>"; ?>
+
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php
+                    <?php
+                    }
                 }
             }
 
-            $totalcursos = $curso->contarCursos($buscar, $usuarios->getRol(), $usuarios->getId(), 2, $var);
-
+            $totalcursos = $curso->contarCursosResuelto($buscar,$usuario[0]->getRol(), $usuarios->getId(), "", $var);
             if ($totalcursos != 0) {
                 $total_paginas = ceil($totalcursos / $fin);
                 if ($total_paginas > 1) { ?>

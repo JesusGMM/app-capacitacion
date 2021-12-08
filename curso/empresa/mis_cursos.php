@@ -20,6 +20,8 @@ $capacitacion = $curso->listarCapacitacionEmpresa($_GET['empresa-id-cursos'], $b
 
 if (is_object($capacitacion[0])) {
     foreach ($capacitacion as $cap) {
+        $inscritos = $curso->cantidadInscritosEmpresa($cap->getId(), $_GET['empresa-id-cursos'], $var);
+        $sedesInscritas = $curso->contarCursosSedeInscritoEmpresa($cap->getId(),$_GET['empresa-id-cursos'], $var);
 ?>
         <div class="col">
             <div class="card">
@@ -31,13 +33,12 @@ if (is_object($capacitacion[0])) {
                     echo 'no hay imagen';
                 ?>
                 <div class="card-body">
-                    Cantidad de preguntas:
-                    <?php
-                    echo $cap->getCan_pregutas(); ?>
+                    <b>Sedes inscritas: </b><?php echo $sedesInscritas; ?><br>
+                    <b>Usuarios inscritos: </b><?php echo $inscritos; ?><br>
 
                 </div>
                 <div class="card-footer" style="text-align: center;">
-                    <button  class="btn btn-success" style="margin-top: 2%;" onclick="vermodalempresa('detalles',<?php echo $cap->getId(); ?>)">Detalles</button>
+                    <button class="btn btn-success" style="margin-top: 2%;" onclick="vermodalempresa('detalles','<?php echo $cap->getId() . '/' . $_GET['empresa-id-cursos']; ?>')">Detalles</button>
                     <button type='button' class='btn btn-danger' style="margin-top: 2%;" onclick="quitarCursoEmpresa(<?php echo $cap->getId() . ',' .  $_GET['empresa-id-cursos'];  ?>)">Quitar capacitación</button>
                 </div>
             </div>

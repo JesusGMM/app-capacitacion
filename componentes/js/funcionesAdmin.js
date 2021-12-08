@@ -311,17 +311,11 @@ function listadoCurso(activar) {
 }
 
 function buscarCursoBorrador(pag) {
-  var name = $("#busqueda-cursos").val();
+  var name = $("#busqueda-cursos-publicos").val();
   $.ajax({
     url: "cursos.php",
     method: "POST",
     data: { buscar: name, pagina: pag },
-    beforeSend: function () {
-      $("#lista-cursos")
-        .html
-        //   '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
-        ();
-    },
     success: function (usuarios) {
       $("#lista-cursos").html(usuarios);
       $("#publicar").removeClass("active");
@@ -365,6 +359,24 @@ function buscarCursoEmpresa(pag, id) {
     },
     success: function (usuarios) {
       $("#cursos-asigandos-empresa").html(usuarios);
+      if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
+    },
+  });
+}
+
+function buscarCursoSede(pag, id) {
+  var name = $("#busqueda-cursos-sede").val();
+  $.ajax({
+    url: "sede/mis_cursos.php",
+    method: "POST",
+    data: { buscar: name, pagina: pag, idsede: id },
+    beforeSend: function () {
+      $("#cursos-asigandos-sede").html(
+        '<div class="text-center"><div class="spinner-border text-secondary" role="status"></div></div>'
+      );
+    },
+    success: function (usuarios) {
+      $("#cursos-asigandos-sede").html(usuarios);
       if (pag != 1) document.getElementById("pagina" + pag).scrollIntoView();
     },
   });

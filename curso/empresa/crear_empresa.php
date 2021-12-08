@@ -1,6 +1,6 @@
 <?php
 require_once 'componentes/nav.php';
-require_once "../controlador/EmpresaControlador.php";
+require_once "../controlador/empresacontrolador.php";
 $empresa = new EmpresaControlador(1);
 $registro = $empresa->crear($_POST);
 if ($registro[0] == 1) { ?>

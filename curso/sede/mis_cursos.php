@@ -3,8 +3,8 @@ if (isset($_POST['buscar'])) {
     session_start();
     $buscar = $_POST['buscar'];
     $pagina = $_POST['pagina'];
-    $_GET['empresa-id-cursos'] = $_POST['idempresa'];
-    require_once "../../controlador/sedecontrolador.php";
+    $_GET['sede-id-cursos'] = $_POST['idsede'];
+    require_once "../../controlador/curso.controlador.php";
     $var = 2;
 } else {
     $buscar = "";
@@ -20,6 +20,7 @@ $capacitacion = $curso->listarCapacitacionSede($_GET['sede-id-cursos'], $buscar,
 
 if (is_object($capacitacion[0])) {
     foreach ($capacitacion as $cap) {
+        $inscritos = $curso->cantidadInscritosSede($cap->getId(), $_GET['sede-id-cursos'], $var);
 ?>
         <div class="col">
             <div class="card">
@@ -31,13 +32,10 @@ if (is_object($capacitacion[0])) {
                     echo 'no hay imagen';
                 ?>
                 <div class="card-body">
-                    Cantidad de preguntas:
-                    <?php
-                    echo $cap->getCan_pregutas(); ?>
-
+                <b>Usuarios inscritos: </b><?php echo $inscritos; ?><br>
                 </div>
                 <div class="card-footer" style="text-align: center;">
-                    <button  class="btn btn-success" style="margin-top: 2%;" onclick="vermodalsede('detalles',<?php echo $cap->getId(); ?>)">Detalles</button>
+                    <button  class="btn btn-success" style="margin-top: 2%;" onclick="vermodalsede('detalles','<?php echo $cap->getId() .'/'.$_GET['sede-id-cursos']; ?>')">Detalles</button>
                     <button type='button' class='btn btn-danger' style="margin-top: 2%;" onclick="quitarCursoSede(<?php echo $cap->getId() . ',' .  $_GET['sede-id-cursos'];  ?>)">Quitar capacitación</button>
                 </div>
             </div>

@@ -4,13 +4,13 @@ if ((isset($_GET['realizar-capacitacion'])) && (!empty(trim($_GET['realizar-capa
     $cap_asignada = $user->validarCurso($_SESSION['id_app_cap'], $_GET['realizar-capacitacion'], 1);
     if ($cap_asignada[0] == 1) {
         if ($cap_asignada[2] != 2) {
-            if ($cap_asignada[2] == 0) {
-                $inicio = $user->iniciarExamen($_SESSION['id_app_cap'], $_GET['realizar-capacitacion']);
-                //  $duracion = $inicio[2];
-            } else if ($cap_asignada[2] == 1) {
-                $reinicio = $user->reiniciarExamen($_SESSION['id_app_cap'], $_GET['realizar-capacitacion']);
-                //$duracion = $reinicio[2];
-            }
+            // if ($cap_asignada[2] == 0) {
+            //     $inicio = $user->iniciarExamen($_SESSION['id_app_cap'], $_GET['realizar-capacitacion']);
+            //     //  $duracion = $inicio[2];
+            // } else if ($cap_asignada[2] == 1) {
+            //     $reinicio = $user->reiniciarExamen($_SESSION['id_app_cap'], $_GET['realizar-capacitacion']);
+            //     //$duracion = $reinicio[2];
+            // }
             $curso = new ControladorCurso(1);
             $cap = $curso->listarCapacitacion("Administrador general", "", $_GET['realizar-capacitacion'], "", "", "", 1);
 

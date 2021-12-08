@@ -19,6 +19,8 @@ $totalcursos = $curso->contarCursos($buscar, $rol, "", 1, $var);
 echo '<input type="hidden" id="rol" value="' . $rol . '"/>';
 foreach ($capacitacion as $cap) {
     $inscritos = $curso->cantidadInscritos($cap->getId(), $var);
+    $empresaInscritas = $curso->contarCursosEmpresaInscrito($cap->getId(), $var);
+    $sedesInscritas = $curso->contarCursosSedeInscrito($cap->getId(), $var);
 ?>
     <div class="col">
         <div class="card">
@@ -30,12 +32,12 @@ foreach ($capacitacion as $cap) {
                 echo 'no hay imagen';
             ?>
             <div class="card-body">
-
-                Usuarios inscritos: <?php echo $inscritos; ?>
-
+                <b>Empresas inscritas: </b><?php echo $empresaInscritas; ?><br>
+                <b>Sedes inscritas: </b><?php echo $sedesInscritas; ?><br>
+                <b>Usuarios inscritos: </b><?php echo $inscritos; ?><br>
             </div>
             <div class="card-footer" style="text-align: center;">
-                <button class="btn btn-success" style="margin-top:2%" onclick="vermodalempresa('detalles',<?php echo $cap->getId(); ?>)">Detalles</button>
+                <button class="btn btn-success" style="margin-top:2%" onclick="vermodal('detalles',<?php echo $cap->getId(); ?>)">Detalles</button>
             </div>
         </div>
     </div>

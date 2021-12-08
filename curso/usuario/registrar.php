@@ -5,7 +5,7 @@ $user = new ControladorUsuario(1);
 $empre = new EmpresaControlador(1);
 $empresas = $empre->listarEmpresaTodas(1,1);
 $registro = $user->crear($_POST);
-var_dump($registro);
+
 if ($registro[0] == 1) { ?>
     <script type="text/javascript">
         Swal.fire({
@@ -59,8 +59,10 @@ if ($registro[0] == 1) { ?>
             <select class="form-select" name="idempresa" id="empresa" onchange="listarSedesEmpresa($(this).val(),1)" required>
                 <option></option>
                 <?php
-                foreach ($empresas as $empresa) {
-                    echo '<option value="' . $empresa->getId() . '">' . $empresa->getNombre() . '</option>';
+                 if (is_object($empresas[0])) {
+                    foreach ($empresas as $empresa) {
+                        echo '<option value="' . $empresa->getId() . '">' . $empresa->getNombre() . '</option>';
+                    }
                 } ?>
             </select>
             <div class="invalid-feedback">

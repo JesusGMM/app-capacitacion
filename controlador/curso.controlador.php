@@ -183,6 +183,14 @@ class ControladorCurso {
             return $cursoMo->listarCursosInscritos(trim($buscar), $empieza, $por_pagina, $id);
     }
 
+    function listarCapacitacionResultados($rol, $id, $buscar, $estado, $empieza, $por_pagina, $var) {
+        $cursoMo = new ModeloCurso($var);
+        if ($rol == 'Administrador general')
+            return $cursoMo->listar(trim($buscar), $estado, $empieza, $por_pagina);
+        else
+            return $cursoMo->listarCursosInscritosResultado(trim($buscar),trim($estado), $empieza, $por_pagina, $id);
+    }
+
     function cantidadInscritos($buscar, $var) {
         $cursoMo = new ModeloCurso($var);
         return $cursoMo->listarInscritos($buscar);
@@ -216,6 +224,11 @@ class ControladorCurso {
         return $cursoMo->cantidadCurso(trim($buscar), $id, $rol, $estado);
     }
 
+    function contarCursosResuelto($buscar, $rol, $id, $estado, $var) {
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->cantidadCursoResultado(trim($buscar), $id, $rol, $estado);
+    }
+
     function listarCapacitacionEmpresa($idempresa, $buscar, $empieza, $fin, $var){
         $cursoMo = new ModeloCurso($var);
         return $cursoMo->empresaBuscarCurso($idempresa, trim($buscar), $empieza, $fin);
@@ -236,4 +249,43 @@ class ControladorCurso {
         return $cursoMo->cantidadCursoSede(trim($buscar), $id);
     }
 
+    function contarCursosEmpresaInscrito($id, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->cantidadCursoInscritosEmpresa($id);
+    }
+
+    function contarCursosSedeInscrito($id, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->cantidadCursoInscritosSede( $id);
+    }
+
+    function listarTodasCapacitacionEmpresa($id, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->listarTodasCapacitacionEmpresa($id);
+    }
+
+    function listarTodasCapacitacionSede($id, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->listarTodasCapacitacionSede($id);
+    }
+
+    function listarTodasCapacitacionUsuario($id, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->listarTodasCapacitacionUsuarios($id);
+    }
+
+    function contarCursosSedeInscritoEmpresa($id, $empresa, $var){
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->cantidadCursoInscritosSedeEmpresa($id,$empresa);
+    }
+
+    function cantidadInscritosEmpresa($id, $empresa, $var) {
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->listarInscritosEmpresa($id,$empresa);
+    }
+
+    function cantidadInscritosSede($id, $sede, $var) {
+        $cursoMo = new ModeloCurso($var);
+        return $cursoMo->listarInscritosSede($id,$sede);
+    }
 }
